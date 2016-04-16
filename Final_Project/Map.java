@@ -8,11 +8,17 @@
 public class Map
 {
     private Box[][] location;
+    private int centerX;
+    private int centerY;
     public Map(){
         location = new Box[50][50];
+        centerX = 25;
+        centerY = 25;
     }
-    public Map(int n, int m){
+    public Map(int n, int m, int x, int y){
         location = new Box[n][m];
+        centerX = x;
+        centerY = y;
     }
     public Map(int n, int m, Box b){
         location = new Box[n][m];
