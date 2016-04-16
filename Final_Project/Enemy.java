@@ -15,6 +15,7 @@ public class Enemy
     private int mp;
     private int atk;
     private int df;
+    
     public Enemy(){
         level = 1;
         race = "goblin";
