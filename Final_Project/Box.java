@@ -7,27 +7,21 @@
  */
 public class Box
 {
-    // instance variables - replace the example below with your own
-    private int x;
-
-    /**
-     * Constructor for objects of class Box
-     */
-    public Box()
-    {
-        // initialise instance variables
-        x = 0;
+    private Enemy thing;
+    private int terrain;
+    private int fortification;
+    private int red;
+    private int blue;
+    private int green;
+    private String type;
+    public Box(){
+        terrain = 1;
+        fortification = 0;
+        red = 255;
+        blue = 255;
+        green = 255;
+        type = "normal";
+        thing = null;
     }
-
-    /**
-     * An example of a method - replace this comment with your own
-     * 
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
-    }
+    
 }
