@@ -49,74 +49,27 @@ public class Game extends JFrame
         this.setTitle("2D-Game-Instance");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        
+
         JPanel panel = new JPanel(true);
-        
+
         MapComponent play = new MapComponent(width, height);
-        
+
         class TimeListener implements ActionListener {
             public void actionPerformed(ActionEvent e) {
-                mouseX = (int)(MouseInfo.getPointerInfo().getLocation().getX() - getLocation().getX() - 3);
-                mouseY = (int)(MouseInfo.getPointerInfo().getLocation().getY() - getLocation().getY() - 25);
-                comp.updateMouse(mouseX, mouseY);
-                comp.repaint();
+                play.repaint();
             }
         }
 
-        class KeyboardListener implements KeyListener {
-            /**
-             * Updates which keys are currently pressed.
-             * 
-             * @param  e  key pressed on the keyboard
-             * @return    void
-             */
-            public void keyPressed(KeyEvent e)
-            {
-                char c = e.getKeyChar();
-            }
-
-            /**
-             * Updates when a key is released.
-             * 
-             * @param  e  key released from the keyboard
-             * @return    void
-             */
-            public void keyReleased(KeyEvent e) {
-                char c = e.getKeyChar();
-            }
-
-            /**
-             * Updates when a key is typed.
-             * 
-             * @param  e  key typed on the keyboard
-             * @return    void
-             */
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-            }
-        }
-        
         class MousePressListener implements MouseListener
         {
-            /**
-             * Updates when the mouse button is pressed.
-             * 
-             * @param  event  mouse button press
-             * @return        void
-             */
+            public void mouseReleased(MouseEvent event) {
+                play.click((int)(MouseInfo.getPointerInfo().getLocation().getX() - getLocation().getX() - 3),
+                    (int)(MouseInfo.getPointerInfo().getLocation().getY() - getLocation().getY() - 25));
+            }
+
             public void mousePressed(MouseEvent event)
             {
 
-            }
-
-            /**
-             * Updates when the mouse button is released.
-             * 
-             * @param  event  mouse button is released
-             * @return        void
-             */
-            public void mouseReleased(MouseEvent event) {
-                comp.click();
             }
 
             public void mouseClicked(MouseEvent event) {}
@@ -126,12 +79,10 @@ public class Game extends JFrame
             public void mouseExited(MouseEvent event) {}
         }
         play.setPreferredSize(new Dimension(width, height));
-        play.addKeyListener(new KeyboardListener());
-        play.addMouseListener(new MousePressListener());
         play.setBounds(0, 0, width, height);
         play.setFocusable(true);
         play.setVisible(true);
-
+        play.addMouseListener(new MousePressListener());
         final int DELAY = 1000 / 60;//60 frames per second
         Timer t = new Timer(DELAY, new TimeListener());
         t.start();
@@ -141,7 +92,6 @@ public class Game extends JFrame
         panel.add(play);
         this.add(panel);
 
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         this.setVisible(true);
 
         setResizable(false);

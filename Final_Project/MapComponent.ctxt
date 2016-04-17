@@ -1,4 +1,8 @@
 #BlueJ class context
 comment0.params=w\ h
 comment0.target=MapComponent(int,\ int)
-numComments=1
+comment1.params=g
+comment1.target=void\ paintComponent(java.awt.Graphics)
+comment2.params=mouseX\ mouseY
+comment2.target=void\ click(int,\ int)
+numComments=3
