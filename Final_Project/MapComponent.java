@@ -14,14 +14,13 @@ public class MapComponent extends JComponent
     private int height;
     private int currentRow;
     private int currentCol;
-    private Box[][] map;
-    private Box currentBox;
-    private Box otherBox;
+    private Tile[][] map;
+    private Tile currentTile;
 
     public MapComponent(int w, int h){
         width = w;
         height = h;
-        map = new Box[51][51];
+        map = new Tile[51][51];
         int randomGreen = 0;
         int randomRed = 0;
         int randomBlue = 0;
@@ -34,12 +33,12 @@ public class MapComponent extends JComponent
                 randomRed = (int)(Math.random() * 255 + 1);
 
                 if(row == 25 && col == 25){
-                    map[row][col] = currentBox = new Box(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),(width/2) - 30, (height/2) - 30);
-                    currentBox.addHero(new Character());
+                    map[row][col] = currentTile = new Tile(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),(width/2) - 30, (height/2) - 30);
+                    currentTile.addHero(new Character());
                 }
                 else{
 
-                    map[row][col] = new Box(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),
+                    map[row][col] = new Tile(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),
                         ((width/2) + 60 * (row - 25) - 30), ((height/2) + 60 * (col - 25) - 30));
                 }
             }
@@ -61,31 +60,31 @@ public class MapComponent extends JComponent
         int yCenter = (height/2) - 30;
         int xShift = mouseX - xCenter;
         int yShift = mouseY - yCenter;
-        int xBox = 0;
-        int yBox = 0;
+        int xTile = 0;
+        int yTile = 0;
         if(xShift < 0){
-            xBox = (int)((xShift - 60) / 60);
+            xTile = (int)((xShift - 60) / 60);
         }
         else if(xShift >= 0){
-            xBox = (int)((xShift) / 60);
+            xTile = (int)((xShift) / 60);
         }
         if(yShift < 0){
-            yBox = (int)((yShift - 60) / 60);
+            yTile = (int)((yShift - 60) / 60);
         }
         else if(yShift >= 0){
-            yBox = (int)((yShift) / 60);
+            yTile = (int)((yShift) / 60);
         }
 
-        if(currentRow + xBox > -1 && currentRow + xBox < 50 && currentCol + yBox > -1 && currentCol + yBox < 50){            
+        if(currentRow + xTile > -1 && currentRow + xTile < 50 && currentCol + yTile > -1 && currentCol + yTile < 50){            
             for(int row = 0; row < 50; row++){
                 for(int col = 0; col < 50; col++){
-                    map[row][col].shift(xBox,yBox);
+                    map[row][col].shift(xTile,yTile);
                 }
             }
-            Character hero = currentBox.getHero();
-            currentBox.addHero(null);
-            currentBox = map[currentRow += xBox][currentCol += yBox];
-            currentBox.addHero(hero);
+            Character hero = currentTile.getHero();
+            currentTile.addHero(null);
+            currentTile = map[currentRow += xTile][currentCol += yTile];
+            currentTile.addHero(hero);
         }
     }
 }

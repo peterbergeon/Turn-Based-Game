@@ -2,12 +2,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 /**
- * Write a description of class Box here.
+ * Write a description of class Tile here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Box
+public class Tile
 {
     private Enemy thing;
     private int terrain;
@@ -18,19 +18,19 @@ public class Box
     private int y;
     private final int width = 60;
     private final int height = 60;
-    public Box(int r, int b, int g, int x, int y){
+    public Tile(int r, int b, int g, int x, int y){
         this(r,g,b,1,0,x,y);
     }
     
-    public Box(int r, int b, int g, int x, int y, String str){
+    public Tile(int r, int b, int g, int x, int y, String str){
         this(r,g,b,1,0,x,y);
     }
 
-    public Box(int r, int b, int g, int t, int x, int y){
+    public Tile(int r, int b, int g, int t, int x, int y){
         this(r,g,b,t,0,x,y);
     }
 
-    public Box(int r, int b, int g, int t, int f, int x, int y){
+    public Tile(int r, int b, int g, int t, int f, int x, int y){
         color = new Color(r,g,b);
         terrain = 1;
         fortification = 0;
