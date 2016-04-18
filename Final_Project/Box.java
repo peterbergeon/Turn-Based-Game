@@ -13,31 +13,27 @@ public class Box
     private int terrain;
     private int fortification;
     private Color color;
-    private String type;
     private Character hero;
     private int x;
     private int y;
     private final int width = 60;
     private final int height = 60;
-        public Box(int r, int b, int g, int x, int y){
-        this(r,g,b,1,0,"normal",x,y);
+    public Box(int r, int b, int g, int x, int y){
+        this(r,g,b,1,0,x,y);
+    }
+    
+    public Box(int r, int b, int g, int x, int y, String str){
+        this(r,g,b,1,0,x,y);
     }
 
     public Box(int r, int b, int g, int t, int x, int y){
-        this(r,g,b,t,0,"normal",x,y);
+        this(r,g,b,t,0,x,y);
     }
 
     public Box(int r, int b, int g, int t, int f, int x, int y){
-        this(r,g,b,t,f,"normal",x,y);
-    }
-
-    public Box(int r, int b, int g, int t, int f,String str, int x, int y){
-        terrain = t;
-        fortification = f;
         color = new Color(r,g,b);
-        type = str;
-        thing = null;
-        hero = null;
+        terrain = 1;
+        fortification = 0;
         this.x = x;
         this.y = y;
     }
@@ -66,10 +62,6 @@ public class Box
         terrain = t;
     }
 
-    public void changeType(String str){
-        type = str;
-    }
-
     public void addEnemy(Enemy e){
         thing = e;
     }
@@ -88,12 +80,13 @@ public class Box
         if(hero != null){
             hero.draw(graphics2,x,y);
         }
+
     }
 
     public void shift(int dx, int dy){
         x -= dx * 60;
         y -= dy * 60;
     }
-    
+
 }
 

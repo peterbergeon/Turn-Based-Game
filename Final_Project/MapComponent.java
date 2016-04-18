@@ -16,6 +16,7 @@ public class MapComponent extends JComponent
     private int currentCol;
     private Box[][] map;
     private Box currentBox;
+    private Box otherBox;
 
     public MapComponent(int w, int h){
         width = w;
@@ -74,7 +75,8 @@ public class MapComponent extends JComponent
         else if(yShift >= 0){
             yBox = (int)((yShift) / 60);
         }
-        if(currentRow + xBox > -1 && currentRow + xBox < 50 && currentCol + yBox > -1 && currentCol + yBox < 50){
+
+        if(currentRow + xBox > -1 && currentRow + xBox < 50 && currentCol + yBox > -1 && currentCol + yBox < 50){            
             for(int row = 0; row < 50; row++){
                 for(int col = 0; col < 50; col++){
                     map[row][col].shift(xBox,yBox);

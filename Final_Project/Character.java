@@ -1,7 +1,11 @@
-
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 /**
  * Write a description of class Character here.
  * 
@@ -17,7 +21,7 @@ public class Character
     private int mp;
     private int atk;
     private int df;
-
+    BufferedImage img;
     public Character(){
         level = 1;
         race = "human";
@@ -30,8 +34,11 @@ public class Character
     }
 
     public void draw(Graphics2D g, int x, int y){
-        Ellipse2D.Double circle = new Ellipse2D.Double(x + 5, y + 5, 50, 50);
-        g.setColor(Color.ORANGE);
-        g.fill(circle);
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File("hero.png"));
+        } catch (IOException e) {
+        }
+        g.drawImage(img,x,y,null);
     }
 }
