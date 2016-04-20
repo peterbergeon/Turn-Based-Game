@@ -1,33 +1,45 @@
-
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
 /**
  * Write a description of class Door here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Door
+public class Door extends Tiles
 {
-    // instance variables - replace the example below with your own
+    private int CRIR; //current row in room
+    private int CCIR; //current collum in room
+    private int width;
+    private int height;
+    private String roomType;
+    private String tileType;
+    BufferedImage img;
     private int x;
+    private int y;
+    private boolean open;
 
-    /**
-     * Constructor for objects of class Door
-     */
-    public Door()
-    {
-        // initialise instance variables
-        x = 0;
+    public Door(int i,int k,String roomType,BufferedImage img2){
+        super(i,k,roomType,img2);   
+        tileType = "Door";
+        open = false;
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     * 
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public String getTileType(){
+        return "Door";
+    }
+    
+    public boolean isOpen(){
+        return open;
+    }
+
+    public void action(){
+        if(!open){
+            open = true;
+        }
     }
 }

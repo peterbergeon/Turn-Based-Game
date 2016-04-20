@@ -26,6 +26,7 @@ public class MapComponent extends JComponent
         int randomBlue = 0;
         currentCol = 25;
         currentRow = 25;
+        Hero hero = new Hero(1,1,1,1,1,"JOAT");
         for(int row = 0; row < 51; row++){
             for(int col = 0; col < 51; col++){
                 randomGreen = (int)(Math.random() * 255 + 1);
@@ -34,7 +35,7 @@ public class MapComponent extends JComponent
 
                 if(row == 25 && col == 25){
                     map[row][col] = currentTile = new Tile(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),(width/2) - 30, (height/2) - 30);
-                    currentTile.addHero(new Character());
+                    currentTile.addHero(hero);
                 }
                 else{
 
@@ -81,7 +82,7 @@ public class MapComponent extends JComponent
                     map[row][col].shift(xTile,yTile);
                 }
             }
-            Character hero = currentTile.getHero();
+            Hero hero = currentTile.getHero();
             currentTile.addHero(null);
             currentTile = map[currentRow += xTile][currentCol += yTile];
             currentTile.addHero(hero);
