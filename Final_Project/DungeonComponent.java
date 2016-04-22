@@ -14,29 +14,29 @@ public class DungeonComponent extends JComponent
     private Floor currentFloor;
     private int height;
     private int width;
-    public DungeonComponent(int w, int h, int d1, int d2, int d3){
-        currentFloor = dungeon[0];
+    private int level;
+    private Hero you;
+    public DungeonComponent(int w, int h, int d1, int d2, int d3, Hero you){
+        this.you = you;
         width = w;
         height = h;
-        floor = new Floor[d3];
+        level = d3;
+        dungeon = new Floor[d3];
         for(int i = 0; i < d3; i++){
-            dungeon[i] = new Floor(w,h,d1,d2,i);
+            dungeon[i] = new Floor(w, h, d1,d2,i,you);
         }
+        currentFloor = dungeon[0];
     }
 
     public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
-        for(int i = 0; i < d3; i++){
-            if(i == currentFloor){
-                dungeon.draw(graphics2);
-            }
-        }
+        currentFloor.draw(graphics2);        
     }
-    
+
     public Floor getFloor(){
-        return currentFloor();
+        return currentFloor;
     }
-    
+
     public void changeFloor(int n){
         currentFloor = dungeon[n];
     }
@@ -60,19 +60,15 @@ public class DungeonComponent extends JComponent
         else if(yShift >= 0){
             yTile = (int)((yShift) / 60);
         }
-
-        if(currentRow + xTile > -1 && currentRow + xTile < 50 && currentCol + yTile > -1 && currentCol + yTile < 50 && ){            
-            for(int row = 0; row < 50; row++){
-                for(int col = 0; col < 50; col++){
-                    map[row][col].shift(xTile,yTile);
-                }
-            }
-            Character hero = currentTile.getHero();
+        Tiles currentTile = currentFloor.getCurrentRoom().getCurrentTiles();
+        if(currentTile.getCRIR() + xTile > -1 && currentTile.getCRIR() + xTile < currentFloor.getCurrentRoom().getWidth() && 
+        currentTile.getCCIR() + yTile > -1 && currentTile.getCCIR() + yTile <  currentFloor.getCurrentRoom().getHeight() && 
+        !currentFloor.getCurrentRoom().getRoom()[currentTile.getCRIR() + xTile][currentTile.getCCIR() + yTile].getType().equals("Wall")){            
+            Character hero = currentTile.getCharacter();
             currentTile.addHero(null);
-            currentTile = map[currentRow += xTile][currentCol += yTile];
-            currentTile.addHero(hero);
+            currentTile = currentFloor.getCurrentRoom().getRoom()[(currentTile.getCRIR() + xTile)][(currentTile.getCCIR() + yTile)];
+            currentTile.addHero(you);
         }
     }
 }
-
 

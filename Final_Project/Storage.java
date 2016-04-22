@@ -1,55 +1,29 @@
 import java.awt.Graphics2D;
 /**
- * Write a description of class Floor here.
+ * Write a description of class Draw here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Floor
+public class Storage
 {
-    private Room[][] floor;
-    private int row;
-    private int col;
-    private int level;
-    private int centerX;
-    private int centerY;
+    private Floor currentFloor;
     private Room currentRoom;
     private Tiles currentTiles;
-
-    public Floor(int w, int h, int row, int col, int level, Hero you){
+    private int roomHeight;
+    private int roomWidth;
+    private int centerX;
+    private int centerY;
+    private int topDoor;
+    public Draw(Floor f, int w, int h){
+        currentFloor = f;
         centerX = w / 2 - 30;
         centerY = h / 2 - 30;
-        this.row = row;
-        this.col = col;
-        this.level = level;
-        floor = new Room[row][col];
-        currentRoom = floor[0][0];
-        for(int i = 0; i < row; i++){
-            for (int k = 0; k < col; k++){
-                floor[i][k] = new Room(i,k,you);
-                floor[0][0] = new Room(0,0,5,5,"Start",you);
-            }
-        }
-    }
-
-    public int getLevel(){
-        return level;
-    }
-    
-    public void changeCurrentTiles(Tiles t){
-        currentTiles = t;        
-    }
-
-    public Room getCurrentRoom(){
-        return currentRoom;
-    }
-
-    public void changeRoom(int row, int col){
-        currentRoom = floor[row][col];
+        currentRoom = currentFloor.getRoom();
+        currentTiles = currentRoom.getCurrentTiles();
     }
 
     public void draw(Graphics2D graphics2){
-        changeCurrentTiles(currentRoom.getCurrentTiles());
         int tilesHorizontal = 0;
         int tilesVertical = 0;
         int CRIR = currentTiles.getCRIR();
@@ -82,7 +56,7 @@ public class Floor
 
     public void drawTopRoom(Graphics2D graphics2){
         if(currentRoom.getCRIF() > 0){
-            Room topRoom = floor[currentRoom.getCRIF() - 1][currentRoom.getCCIF()];
+            Room topRoom = currentFloor.getFloor()[currentRoom.getCRIF() - 1][currentRoom.getCCIF()];
             int topLeftHorizontal = (currentRoom.getTopDoor().getCCIR() - currentTiles.getCCIR()) - topRoom.getBotDoor().getCCIR();//looks at how many spaces left of center is topRooms left edge, should always be negative
             int topLeftVertical = -1 * (currentRoom.getCurrentTiles().getCRIR() +  topRoom.getHeight() - 1);
             for(int i = 0; i < topRoom.getWidth(); i++){
@@ -95,7 +69,7 @@ public class Floor
 
     public void drawBotRoom(Graphics2D graphics2){
         if(currentRoom.getCRIF() < 15){
-            Room botRoom = floor[currentRoom.getCRIF() + 1][currentRoom.getCCIF()];
+            Room botRoom = currentFloor.getFloor()[currentRoom.getCRIF() + 1][currentRoom.getCCIF()];
             int topLeftHorizontal = (currentRoom.getBotDoor().getCCIR() - currentTiles.getCCIR()) - botRoom.getTopDoor().getCCIR();//looks at how many spaces left of center is topRooms left edge, should always be negative
             int topLeftVertical = (currentRoom.getHeight() - currentTiles.getCRIR() - 1);
             for(int i = 0; i < botRoom.getWidth(); i++){
@@ -108,7 +82,7 @@ public class Floor
 
     public void drawLeftRoom(Graphics2D graphics2){
         if(currentRoom.getCCIF() > 0){
-            Room leftRoom = floor[currentRoom.getCRIF()][currentRoom.getCCIF() - 1];
+            Room leftRoom = currentFloor.getFloor()[currentRoom.getCRIF()][currentRoom.getCCIF() - 1];
             int topLeftHorizontal = -1 * (currentRoom.getCurrentTiles().getCCIR() + leftRoom.getWidth() - 1);
             int topLeftVertical = (currentRoom.getLeftDoor().getCRIR() - currentTiles.getCRIR()) - leftRoom.getRightDoor().getCRIR();
             for(int i = 0; i < leftRoom.getWidth(); i++){
@@ -121,12 +95,12 @@ public class Floor
 
     public void drawRightRoom(Graphics2D graphics2){
         if(currentRoom.getCCIF() < 15){
-            Room rightRoom = floor[currentRoom.getCRIF()][currentRoom.getCCIF() + 1];
+            Room rightRoom = currentFloor.getFloor()[currentRoom.getCRIF()][currentRoom.getCCIF() + 1];
             int topLeftHorizontal = (currentRoom.getWidth() - currentRoom.getCurrentTiles().getCCIR() - 1);
-            int topLeftVertical = ((currentRoom.getRightDoor().getCRIR() - currentTiles.getCRIR()) - rightRoom.getRightDoor().getCRIR() - 1);
+            int topLeftVertical = ((currentRoom.getRightDoor().getCRIR() - currentTiles.getCRIR()) - rRoom.getRightDoor().getCRIR() - 1);
             for(int i = 0; i < rightRoom.getWidth(); i++){
                 for(int k = 0; k < rightRoom.getHeight(); k++){
-                    rightRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
+                    topRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
                 }
             }
         }

@@ -51,8 +51,8 @@ public class Game extends JFrame
         this.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(true);
-
-        MapComponent play = new MapComponent(width, height);
+        Hero you = new Hero(1,100,20,0,10,"JOAT");
+        DungeonComponent play = new DungeonComponent(width, height,15,15,10,you);
 
         class TimeListener implements ActionListener {
             public void actionPerformed(ActionEvent e) {
@@ -83,7 +83,7 @@ public class Game extends JFrame
         play.setFocusable(true);
         play.setVisible(true);
         play.addMouseListener(new MousePressListener());
-        final int DELAY = 1000 / 60;//60 frames per second
+        final int DELAY = 1000 / 6;//60 frames per second
         Timer t = new Timer(DELAY, new TimeListener());
         t.start();
 

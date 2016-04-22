@@ -23,8 +23,8 @@ public class Door extends Tiles
     private int y;
     private boolean open;
 
-    public Door(int i,int k,String roomType,BufferedImage img2){
-        super(i,k,roomType,img2);   
+    public Door(int i,int k,String roomType){
+        super(i,k,roomType,"Door");   
         tileType = "Door";
         open = false;
     }
