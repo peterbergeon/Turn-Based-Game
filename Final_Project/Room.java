@@ -1,9 +1,4 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import javax.imageio.*;
-import javax.swing.*;
+
 /**
  * Write a description of class Room here.
  * 
@@ -26,7 +21,6 @@ public class Room
     private Door topDoor;   
     private Tiles[][] room;
     private String roomType;
-    BufferedImage img;
     private Tiles currentTiles;
 
     public Room(int r, int c, Hero you){
@@ -45,33 +39,29 @@ public class Room
         this.roomType = roomType;
         String color = whatColor(r+c);
         room = new Tiles[sizeW][sizeH];
-        try {
-            img = ImageIO.read(new File(color + " Tile.png"));
-        } catch (IOException e) {
-        }
         for(int i = 0; i < sizeW; i++){
             for(int k = 0; k < sizeH; k++){
                 if(k == 0 || i == 0){
-                    room[i][k] = new Tiles(i,k,roomType, "Wall");
+                    room[i][k] = new Tiles(i,k,"Wall");
                 }
                 else if((i != top && i != bot) || k != 0 && ((k != left && k != right) || i != 0)){
-                    room[i][k] = new Tiles(i,k,roomType, color);
+                    room[i][k] = new Tiles(i,k, color);
                 }
                 else { 
                     if(i == top && k == 0 && this.CRIF != 0){
-                        topDoor = new Door(i,k,roomType);
+                        topDoor = new Door(i,k);
                         room[i][k] = topDoor;
                     }
                     else if(i == bot && k == sizeH - 1 && this.CRIF != 14){
-                        botDoor = new Door(i,k,roomType);
+                        botDoor = new Door(i,k);
                         room[i][k] = botDoor;
                     }
                     else if(k == left && i == 0 && this.CCIF != 0){
-                        leftDoor = new Door(i,k,roomType);
+                        leftDoor = new Door(i,k);
                         room[i][k] = leftDoor;
                     }
                     else if(k == right && i == sizeH - 1 && this.CCIF != 14){
-                        rightDoor = new Door(i,k,roomType);
+                        rightDoor = new Door(i,k);
                         room[i][k] = rightDoor;
                     }
                 }
@@ -114,6 +104,10 @@ public class Room
 
     public Tiles getCurrentTiles(){
         return currentTiles;
+    }
+    
+    public Tiles getCurrentTiles(int r, int c){
+        return room[r][c]'
     }
 
     public void changeCurrentTiles(int x, int y){

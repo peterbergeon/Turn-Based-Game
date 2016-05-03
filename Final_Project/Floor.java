@@ -1,4 +1,10 @@
 import java.awt.Graphics2D;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
 /**
  * Write a description of class Floor here.
  * 
@@ -15,6 +21,9 @@ public class Floor
     private int centerY;
     private Room currentRoom;
     private Tiles currentTiles;
+    private BufferedImage door;
+    private BufferedImage wall;
+    private BufferedImage tile;
 
     public Floor(int w, int h, int row, int col, int level, Hero you){
         centerX = w / 2 - 30;
@@ -24,6 +33,14 @@ public class Floor
         this.level = level;
         floor = new Room[row][col];
         currentRoom = floor[0][0];
+        try {
+            door = ImageIO.read(new File("Door.png"));
+        } catch (IOException e) {
+        }
+        try {
+            wall = ImageIO.read(new File("Wall.png"));
+        } catch (IOException e) {
+        }
         for(int i = 0; i < row; i++){
             for (int k = 0; k < col; k++){
                 floor[i][k] = new Room(i,k,you);
@@ -31,11 +48,15 @@ public class Floor
             }
         }
     }
+    
+    public Room getRoom(int r, int c){
+        return floor[r][c];
+    }
 
     public int getLevel(){
         return level;
     }
-    
+
     public void changeCurrentTiles(Tiles t){
         currentTiles = t;        
     }
@@ -50,83 +71,108 @@ public class Floor
 
     public void draw(Graphics2D graphics2){
         changeCurrentTiles(currentRoom.getCurrentTiles());
+        Room topRoom = getRoom(currentRoom.getCRIF() - 1, currentRoom.getCCIF());
+        Room botRoom = getRoom(currentRoom.getCRIF() + 1, currentRoom.getCCIF());
+        Room leftRoom = getRoom(currentRoom.getCRIF(), currentRoom.getCCIF() - 1);
+        Room rightRoom = getRoom(currentRoom.getCRIF(), currentRoom.getCCIF() + 1);
         int tilesHorizontal = 0;
         int tilesVertical = 0;
         int CRIR = currentTiles.getCRIR();
         int CCIR = currentTiles.getCCIR();
         if(currentRoom.getTopDoor().isOpen()){
-            drawTopRoom(graphics2);
+            try {
+                tile = ImageIO.read(new File(topRoom.whatColor(topRoom.getCRIF() + topRoom.getCCIF()) + " Tile.png"));
+            } catch (IOException e) {
+            }
+            drawTopRoom(graphics2,tile);
         }
         if(currentRoom.getBotDoor().isOpen()){
-            drawBotRoom(graphics2);
+            try {
+                tile = ImageIO.read(new File(botRoom.whatColor(botRoom.getCRIF() + botRoom.getCCIF()) + " Tile.png"));
+            } catch (IOException e) {
+            }
+            drawBotRoom(graphics2, tile);
         }
         if(currentRoom.getLeftDoor().isOpen()){
-            drawLeftRoom(graphics2);                               
+            try {
+                tile = ImageIO.read(new File(leftRoom.whatColor(leftRoom.getCRIF() + leftRoom.getCCIF()) + " Tile.png"));
+            } catch (IOException e) {
+            }
+            drawLeftRoom(graphics2,tile);                               
         }
         if(currentRoom.getRightDoor().isOpen()){
-            drawRightRoom(graphics2);
+            try {
+                tile = ImageIO.read(new File(rightRoom.whatColor(rightRoom.getCRIF() + rightRoom.getCCIF()) + " Tile.png"));
+            } catch (IOException e) {
+            }
+            drawRightRoom(graphics2,tile);
         }       
+        try {
+            tile = ImageIO.read(new File(currentRoom.whatColor(currentRoom.getCRIF() + currentRoom.getCCIF()) + " Tile.png"));
+        } catch (IOException e) {
+        }
         for(int i = 0; i < currentRoom.getWidth(); i++){
             for(int k = 0; k < currentRoom.getHeight(); k++){
                 if(i == CRIR && k == CCIR){
-                    currentRoom.getRoom()[i][k].draw(graphics2, centerX, centerY);
+                    graphics2.drawImage(tile, centerX, centerY, null);
                 }
                 else {
                     tilesHorizontal = i - CCIR;
                     tilesVertical = k - CRIR;
-                    currentRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * tilesHorizontal, centerY + 60 * tilesVertical);
+                    graphics2.drawImage(tile, centerX + 60 * tilesHorizontal, centerY + 60 * tilesVertical, null);
                 }
             }
         }
     }
 
-    public void drawTopRoom(Graphics2D graphics2){
+    public void drawTopRoom(Graphics2D graphics2, BufferedImage tile){
         if(currentRoom.getCRIF() > 0){
             Room topRoom = floor[currentRoom.getCRIF() - 1][currentRoom.getCCIF()];
             int topLeftHorizontal = (currentRoom.getTopDoor().getCCIR() - currentTiles.getCCIR()) - topRoom.getBotDoor().getCCIR();//looks at how many spaces left of center is topRooms left edge, should always be negative
             int topLeftVertical = -1 * (currentRoom.getCurrentTiles().getCRIR() +  topRoom.getHeight() - 1);
             for(int i = 0; i < topRoom.getWidth(); i++){
                 for(int k = 0; k < topRoom.getHeight(); k++){
-                    topRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
+                    if(topRoom.getTile(
+                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
     }
 
-    public void drawBotRoom(Graphics2D graphics2){
+    public void drawBotRoom(Graphics2D graphics2, BufferedImage tile){
         if(currentRoom.getCRIF() < 15){
             Room botRoom = floor[currentRoom.getCRIF() + 1][currentRoom.getCCIF()];
             int topLeftHorizontal = (currentRoom.getBotDoor().getCCIR() - currentTiles.getCCIR()) - botRoom.getTopDoor().getCCIR();//looks at how many spaces left of center is topRooms left edge, should always be negative
             int topLeftVertical = (currentRoom.getHeight() - currentTiles.getCRIR() - 1);
             for(int i = 0; i < botRoom.getWidth(); i++){
                 for(int k = 0; k < botRoom.getHeight(); k++){
-                    botRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
+                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
     }
 
-    public void drawLeftRoom(Graphics2D graphics2){
+    public void drawLeftRoom(Graphics2D graphics2, BufferedImage tile){
         if(currentRoom.getCCIF() > 0){
             Room leftRoom = floor[currentRoom.getCRIF()][currentRoom.getCCIF() - 1];
             int topLeftHorizontal = -1 * (currentRoom.getCurrentTiles().getCCIR() + leftRoom.getWidth() - 1);
             int topLeftVertical = (currentRoom.getLeftDoor().getCRIR() - currentTiles.getCRIR()) - leftRoom.getRightDoor().getCRIR();
             for(int i = 0; i < leftRoom.getWidth(); i++){
                 for(int k = 0; k < leftRoom.getHeight(); k++){
-                    leftRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
+                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
     }
 
-    public void drawRightRoom(Graphics2D graphics2){
+    public void drawRightRoom(Graphics2D graphics2,BufferedImage tile){
         if(currentRoom.getCCIF() < 15){
             Room rightRoom = floor[currentRoom.getCRIF()][currentRoom.getCCIF() + 1];
             int topLeftHorizontal = (currentRoom.getWidth() - currentRoom.getCurrentTiles().getCCIR() - 1);
             int topLeftVertical = ((currentRoom.getRightDoor().getCRIR() - currentTiles.getCRIR()) - rightRoom.getRightDoor().getCRIR() - 1);
             for(int i = 0; i < rightRoom.getWidth(); i++){
                 for(int k = 0; k < rightRoom.getHeight(); k++){
-                    rightRoom.getRoom()[i][k].draw(graphics2, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k));
+                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }

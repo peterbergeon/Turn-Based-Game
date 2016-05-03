@@ -18,11 +18,10 @@ public class Tiles
     private String tileType;
     private Character thing;
 
-    public Tiles(int i,int k,String roomType, String tileType){
+    public Tiles(int i,int k,String tileType){
         CRIR = i;
         CCIR = k;
-        this.roomType = roomType;
-        this.tileType = roomType;
+        this.tileType = tileType;
     }
 
     public String getType(){
@@ -39,15 +38,6 @@ public class Tiles
 
     public Character getCharacter(){
         return thing;        
-    }
-
-    public void draw(Graphics2D g, int x, int y){
-        g.setColor(Color)
-        g.fillRect(x, y, 60, 60)
-        
-        if(thing != null){
-            thing.draw(g,x,y);
-        }
     }
 
     public boolean hasHero(){
