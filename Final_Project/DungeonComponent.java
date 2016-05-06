@@ -69,8 +69,6 @@ public class DungeonComponent extends JComponent
             currentTile = currentFloor.getCurrentRoom().getRoom()[(currentTile.getCRIR() + xTile)][(currentTile.getCCIR() + yTile)];
             currentTile.addHero(you);
         }
-        
-        
     }
 }
 

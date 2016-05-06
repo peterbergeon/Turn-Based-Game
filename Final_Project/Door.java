@@ -1,3 +1,9 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
 /**
  * Write a description of class Door here.
  * 
@@ -29,9 +35,5 @@ public class Door extends Tiles
         if(!open){
             open = true;
         }
-    }
-    
-    public void endTurn(){
-
     }
 }
