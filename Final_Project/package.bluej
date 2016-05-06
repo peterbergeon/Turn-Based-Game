@@ -62,7 +62,6 @@ dependency3.type=UsesDependency
 dependency4.from=DungeonComponent
 dependency4.to=Floor
 dependency4.type=UsesDependency
-<<<<<<< HEAD
 dependency5.from=DungeonComponent
 dependency5.to=Character
 dependency5.type=UsesDependency
@@ -86,16 +85,6 @@ package.editor.x=-8
 package.editor.y=-8
 package.numDependencies=26
 package.numTargets=16
-=======
-objectbench.height=100
-objectbench.width=356
-package.editor.height=529
-package.editor.width=563
-package.editor.x=223
-package.editor.y=39
-package.numDependencies=4
-package.numTargets=9
->>>>>>> parent of 14d4e7d... Version 0.1
 package.showExtends=true
 package.showUses=true
 project.charset=UTF-8
@@ -198,13 +187,8 @@ target16.x=560
 target16.y=210
 target2.editor.height=700
 target2.editor.width=900
-<<<<<<< HEAD
 target2.editor.x=32
 target2.editor.y=12
-=======
-target2.editor.x=187
-target2.editor.y=232
->>>>>>> parent of 14d4e7d... Version 0.1
 target2.height=50
 target2.name=Chest
 target2.showInterface=false
@@ -249,21 +233,12 @@ target5.showInterface=false
 target5.type=ClassTarget
 target5.typeParameters=
 target5.width=80
-<<<<<<< HEAD
 target5.x=270
 target5.y=10
 target6.editor.height=677
 target6.editor.width=900
 target6.editor.x=-7
 target6.editor.y=7
-=======
-target5.x=360
-target5.y=280
-target6.editor.height=735
-target6.editor.width=697
-target6.editor.x=676
-target6.editor.y=0
->>>>>>> parent of 14d4e7d... Version 0.1
 target6.height=50
 target6.name=Character
 target6.naviview.expanded=true
@@ -287,8 +262,8 @@ target7.x=490
 target7.y=470
 target8.editor.height=629
 target8.editor.width=900
-target8.editor.x=174
-target8.editor.y=50
+target8.editor.x=233
+target8.editor.y=24
 target8.height=50
 target8.name=Tile
 target8.naviview.expanded=true
@@ -296,7 +271,6 @@ target8.showInterface=false
 target8.type=ClassTarget
 target8.typeParameters=
 target8.width=80
-<<<<<<< HEAD
 target8.x=80
 target8.y=390
 target9.editor.height=700
@@ -306,20 +280,9 @@ target9.editor.y=12
 target9.height=50
 target9.name=Door
 target9.naviview.expanded=true
-=======
-target8.x=270
-target8.y=180
-target9.height=50
-target9.name=Map
->>>>>>> parent of 14d4e7d... Version 0.1
 target9.showInterface=false
 target9.type=ClassTarget
 target9.typeParameters=
 target9.width=80
-<<<<<<< HEAD
 target9.x=940
 target9.y=150
-=======
-target9.x=250
-target9.y=70
->>>>>>> parent of 14d4e7d... Version 0.1

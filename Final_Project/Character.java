@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
-=======
-
->>>>>>> parent of 14d4e7d... Version 0.1
 /**
  * Write a description of class Character here.
  * 
@@ -21,7 +17,6 @@ public class Character
     private int mp;
     private int atk;
     private int df;
-<<<<<<< HEAD
     boolean isHero;
     BufferedImage img;
     public Character(int l, int h, int m, int a, int d, boolean isHero){
@@ -40,16 +35,5 @@ public class Character
 
     public void draw(Graphics2D g, int x, int y){
         g.drawImage(img,x,y,null);
-=======
-    
-    public Character(){
-        level = 1;
-        race = "human";
-        profession = "warrior";
-        hp = 100;
-        mp = 20;
-        atk = 10;
-        df = 0;
->>>>>>> parent of 14d4e7d... Version 0.1
     }
 }

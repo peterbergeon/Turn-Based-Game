@@ -8,11 +8,10 @@ import javax.swing.JComponent;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class MapComponent
+public class MapComponent extends JComponent
 {
     private int width;
     private int height;
-<<<<<<< HEAD
     private int currentRow;
     private int currentCol;
     private Tile[][] map;
@@ -43,41 +42,20 @@ public class MapComponent
                     map[row][col] = new Tile(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),
                         ((width/2) + 60 * (row - 25) - 30), ((height/2) + 60 * (col - 25) - 30));
                 }
-=======
-    private Box[][] map;
-    private Box currentBox;
-    
-    public MapComponent(int w, int h){
-        width = w;
-        height = h;
-        map = new Box[50][50];
-        int randomGreen = 0;
-        int randomRed = 0;
-        int randomBlue = 0;
-        for(int row = 0; row < 50; row++){
-            for(int col = 0; col < 50; col++){
-                randomGreen = (int)(Math.random() * 255 + 1);
-                randomBlue = (int)(Math.random() * 255 + 1);
-                randomRed = (int)(Math.random() * 255 + 1);
-                map[row][col] = new Box(randomRed,randomBlue,randomGreen);
->>>>>>> parent of 14d4e7d... Version 0.1
             }
         }
-        
-        currentBox = map[(int)(Math.random() * 50)][(int)(Math.random() * 50)];
-    }
-    
-     public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
-        nextSection();
-        currentBox.draw(g2);
-    }
-    
-     public void updateMouse(int mouseX, int mouseY) {
-        currentSection.updateMouse(mouseX, mouseY);
+
     }
 
-<<<<<<< HEAD
+    public void paintComponent(Graphics g) {
+        Graphics2D graphics2 = (Graphics2D)g;
+        for(int row = 0; row < 50; row++){
+            for(int col = 0; col < 50; col++){
+                map[row][col].draw(graphics2);
+            }
+        }
+    }
+
     public void click(int mouseX, int mouseY){
         int xCenter = (width/2) - 30;
         int yCenter = (height/2) - 30;
@@ -109,9 +87,5 @@ public class MapComponent
             currentTile = map[currentRow += xTile][currentCol += yTile];
             currentTile.addHero(hero);
         }
-=======
-    public void click() {
-        currentSection.click();
->>>>>>> parent of 14d4e7d... Version 0.1
     }
 }
