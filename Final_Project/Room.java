@@ -41,14 +41,7 @@ public class Room
         room = new Tiles[sizeW][sizeH];
         for(int i = 0; i < sizeW; i++){
             for(int k = 0; k < sizeH; k++){
-                if(k == 0 || i == 0){
-                    room[i][k] = new Tiles(i,k,"Wall");
-                }
-                else if((i != top && i != bot) || k != 0 && ((k != left && k != right) || i != 0)){
-                    room[i][k] = new Tiles(i,k, color);
-                }
-                else { 
-                    if(i == top && k == 0 && this.CRIF != 0){
+                if(i == top && k == 0 && this.CRIF != 0){
                         topDoor = new Door(i,k);
                         room[i][k] = topDoor;
                     }
@@ -64,6 +57,11 @@ public class Room
                         rightDoor = new Door(i,k);
                         room[i][k] = rightDoor;
                     }
+                else if(k == 0 || i == 0){
+                    room[i][k] = new Wall(i,k);
+                }
+                else if((i != top && i != bot) || k != 0 && ((k != left && k != right) || i != 0)){
+                    room[i][k] = new Tiles(i,k,roomType);
                 }
             }
         }
@@ -107,7 +105,7 @@ public class Room
     }
     
     public Tiles getCurrentTiles(int r, int c){
-        return room[r][c]'
+        return room[r][c];
     }
 
     public void changeCurrentTiles(int x, int y){

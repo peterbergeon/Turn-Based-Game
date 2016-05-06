@@ -23,6 +23,7 @@ public class Floor
     private Tiles currentTiles;
     private BufferedImage door;
     private BufferedImage wall;
+    private BufferedImage chest;
     private BufferedImage tile;
 
     public Floor(int w, int h, int row, int col, int level, Hero you){
@@ -41,6 +42,10 @@ public class Floor
             wall = ImageIO.read(new File("Wall.png"));
         } catch (IOException e) {
         }
+        try {
+            chest = ImageIO.read(new File("Chest.png"));
+        } catch (IOException e) {
+        }
         for(int i = 0; i < row; i++){
             for (int k = 0; k < col; k++){
                 floor[i][k] = new Room(i,k,you);
@@ -48,7 +53,7 @@ public class Floor
             }
         }
     }
-    
+
     public Room getRoom(int r, int c){
         return floor[r][c];
     }
@@ -132,8 +137,14 @@ public class Floor
             int topLeftVertical = -1 * (currentRoom.getCurrentTiles().getCRIR() +  topRoom.getHeight() - 1);
             for(int i = 0; i < topRoom.getWidth(); i++){
                 for(int k = 0; k < topRoom.getHeight(); k++){
-                    if(topRoom.getTile(
-                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    if(topRoom.getRoom()[i][k].getType().equals("Chest"))
+                        graphics2.drawImage(chest, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Door"))
+                        graphics2.drawImage(door, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Wall"))
+                        graphics2.drawImage(wall, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else 
+                        graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
@@ -146,7 +157,14 @@ public class Floor
             int topLeftVertical = (currentRoom.getHeight() - currentTiles.getCRIR() - 1);
             for(int i = 0; i < botRoom.getWidth(); i++){
                 for(int k = 0; k < botRoom.getHeight(); k++){
-                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    if(topRoom.getRoom()[i][k].getType().equals("Chest"))
+                        graphics2.drawImage(chest, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Door"))
+                        graphics2.drawImage(door, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Wall"))
+                        graphics2.drawImage(wall, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else 
+                        graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
@@ -159,7 +177,14 @@ public class Floor
             int topLeftVertical = (currentRoom.getLeftDoor().getCRIR() - currentTiles.getCRIR()) - leftRoom.getRightDoor().getCRIR();
             for(int i = 0; i < leftRoom.getWidth(); i++){
                 for(int k = 0; k < leftRoom.getHeight(); k++){
-                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    if(topRoom.getRoom()[i][k].getType().equals("Chest"))
+                        graphics2.drawImage(chest, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Door"))
+                        graphics2.drawImage(door, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Wall"))
+                        graphics2.drawImage(wall, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else 
+                        graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }
@@ -172,7 +197,14 @@ public class Floor
             int topLeftVertical = ((currentRoom.getRightDoor().getCRIR() - currentTiles.getCRIR()) - rightRoom.getRightDoor().getCRIR() - 1);
             for(int i = 0; i < rightRoom.getWidth(); i++){
                 for(int k = 0; k < rightRoom.getHeight(); k++){
-                    graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    if(topRoom.getRoom()[i][k].getType().equals("Chest"))
+                        graphics2.drawImage(chest, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Door"))
+                        graphics2.drawImage(door, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else if(topRoom.getRoom()[i][k].getType().equals("Wall"))
+                        graphics2.drawImage(wall, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
+                    else 
+                        graphics2.drawImage(tile, centerX + 60 * (topLeftHorizontal + i), centerY + 60 * (topLeftVertical + k),null);
                 }
             }
         }

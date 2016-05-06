@@ -15,7 +15,7 @@ public class Storage
     private int centerX;
     private int centerY;
     private int topDoor;
-    public Draw(Floor f, int w, int h){
+    public void Draw(Floor f, int w, int h){
         currentFloor = f;
         centerX = w / 2 - 30;
         centerY = h / 2 - 30;

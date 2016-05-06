@@ -1,10 +1,3 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import javax.imageio.*;
-import javax.swing.*;
-import java.awt.Graphics2D;
 /**
  * Write a description of class Tiles here.
  * 
@@ -66,12 +59,15 @@ public class Tiles
     //        return false;
     //   }
 
-    public void addHero(Hero you){
-        thing = you;
+    public void addCharacter(Character other){
+        thing = other;
     }
 
     public void action(){
+        
+    }
+    
+    public void endTurn(){
 
     }
-
 }
