@@ -14,12 +14,18 @@ public class Door extends Tiles
 {
     private int CRIR; //current row in room
     private int CCIR; //current collum in room
+    private int width;
+    private int height;
+    private String roomType;
     private String tileType;
-    private Character thing;
+    BufferedImage img;
+    private int x;
+    private int y;
     private boolean open;
 
-    public Door(int i,int k){  
-        super(i,k,"Door");
+    public Door(int i,int k,String roomType){
+        super(i,k,roomType,"Door");   
+        tileType = "Door";
         open = false;
     }
 
