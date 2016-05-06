@@ -25,7 +25,7 @@ public class Hero extends Character
         super(l,h,m,a,d,true);
         type = t;
         try {
-            img = ImageIO.read(new File(t+ ".png"));
+            img = ImageIO.read(new File(t + " Tile.png"));
         } catch (IOException e) {
         }
     }
