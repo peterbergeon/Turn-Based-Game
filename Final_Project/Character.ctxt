@@ -1,8 +1,6 @@
 #BlueJ class context
-comment0.params=l\ h\ m\ a\ d\ isHero
-comment0.target=Character(int,\ int,\ int,\ int,\ int,\ boolean)
-comment1.params=
-comment1.target=boolean\ hasHero()
-comment2.params=g\ x\ y
-comment2.target=void\ draw(java.awt.Graphics2D,\ int,\ int)
-numComments=3
+comment0.params=
+comment0.target=Character()
+comment1.params=g\ x\ y
+comment1.target=void\ draw(java.awt.Graphics2D,\ int,\ int)
+numComments=2

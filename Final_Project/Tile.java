@@ -9,10 +9,11 @@ import java.awt.Graphics2D;
  */
 public class Tile
 {
+    private Enemy thing;
     private int terrain;
     private int fortification;
     private Color color;
-    private Hero hero;
+    private Character hero;
     private int x;
     private int y;
     private final int width = 60;
@@ -61,11 +62,15 @@ public class Tile
         terrain = t;
     }
 
-    public void addHero(Hero h){
+    public void addEnemy(Enemy e){
+        thing = e;
+    }
+
+    public void addHero(Character h){
         hero = h;
     }
 
-    public Hero getHero(){
+    public Character getHero(){
         return hero;
     }
 
@@ -75,11 +80,13 @@ public class Tile
         if(hero != null){
             hero.draw(graphics2,x,y);
         }
+
     }
 
     public void shift(int dx, int dy){
         x -= dx * 60;
         y -= dy * 60;
     }
+
 }
 

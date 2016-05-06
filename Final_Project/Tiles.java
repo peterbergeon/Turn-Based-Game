@@ -1,10 +1,4 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
-import java.io.*;
-import javax.imageio.*;
-import javax.swing.*;
-import java.awt.Graphics2D;
+
 /**
  * Write a description of class Tiles here.
  * 
@@ -13,75 +7,27 @@ import java.awt.Graphics2D;
  */
 public class Tiles
 {
-    private int CRIR; //current row in room
-    private int CCIR; //current collum in room
-    private int width;
-    private int height;
-    private String roomType;
-    private String tileType;
-    private Character thing;
-    BufferedImage img;
-    
-    public Tiles(int i,int k,String roomType, BufferedImage img){
-        CRIR = i;
-        CCIR = k;
-        this.roomType = roomType;
-        tileType = roomType;
-        this.img = img;
+    // instance variables - replace the example below with your own
+    private int x;
+
+    /**
+     * Constructor for objects of class Tiles
+     */
+    public Tiles()
+    {
+        // initialise instance variables
+        x = 0;
     }
-    
-    public String getType(){
-        return tileType;
+
+    /**
+     * An example of a method - replace this comment with your own
+     * 
+     * @param  y   a sample parameter for a method
+     * @return     the sum of x and y 
+     */
+    public int sampleMethod(int y)
+    {
+        // put your code here
+        return x + y;
     }
-    
-    public int getCRIR(){
-        return CRIR;
-    }
-    
-    public int getCCIR(){
-        return CCIR;
-    }
-    
-    public Character getCharacter(){
-        return thing;        
-    }
-    
-    public void draw(Graphics2D g, int x, int y){
-        g.drawImage(img,x,y,null);
-        if(thing != null){
-            thing.draw(g,x,y);
-        }
-    }
-    
-//    public void setXY(int x, int y){
-//        this.x = x;
-//        this.y = y;
- //   }
-       
-//    public void shift(int dx, int dy){
-//        x -= dx * 60;
-  //      y -= dy * 60;
-    //}
-    
-//    public int getX(){
-//        return x;
-//    }
-//        public int getY(){
-//        return y;
-//    }
-    
-//    public boolean hasHero(){
-//        if(thing.hasHero()) return true;
-//        return false;
- //   }
-    
-    public void addHero(Hero you){
-        thing = you;
-    }
-    
-    public void action(){
-        
-    }
-    
-    
 }

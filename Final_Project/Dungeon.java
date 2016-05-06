@@ -1,19 +1,19 @@
 
 /**
- * Write a description of class Door here.
+ * Write a description of class Dungeon here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Door
+public class Dungeon
 {
     // instance variables - replace the example below with your own
     private int x;
 
     /**
-     * Constructor for objects of class Door
+     * Constructor for objects of class Dungeon
      */
-    public Door()
+    public Dungeon()
     {
         // initialise instance variables
         x = 0;
