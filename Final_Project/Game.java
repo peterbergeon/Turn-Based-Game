@@ -52,19 +52,15 @@ public class Game extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height);
+        MapComponent play = new MapComponent(width, height, 500, 500);
 
-        class TimeListener implements ActionListener {
-            public void actionPerformed(ActionEvent e) {
-                play.repaint();
-            }
-        }
 
         class MousePressListener implements MouseListener
         {
             public void mouseReleased(MouseEvent event) {
                 play.click((int)(MouseInfo.getPointerInfo().getLocation().getX() - getLocation().getX() - 3),
                     (int)(MouseInfo.getPointerInfo().getLocation().getY() - getLocation().getY() - 25));
+                play.repaint();
             }
 
             public void mousePressed(MouseEvent event)
@@ -83,9 +79,6 @@ public class Game extends JFrame
         play.setFocusable(true);
         play.setVisible(true);
         play.addMouseListener(new MousePressListener());
-        final int DELAY = 1000 / 60;//60 frames per second
-        Timer t = new Timer(DELAY, new TimeListener());
-        t.start();
 
         panel.setLayout(null);
 

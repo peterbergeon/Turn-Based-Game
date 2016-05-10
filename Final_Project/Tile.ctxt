@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.params=row\ col\ color
+comment0.target=Tile(int,\ int,\ int)
+comment1.params=h
+comment1.target=void\ addCharacter(Character)
+comment2.params=
+comment2.target=Character\ getCharacter()
+comment3.params=
+comment3.target=int\ getColor()
+comment4.params=
+comment4.target=int\ getRow()
+comment5.params=
+comment5.target=int\ getCol()
+comment6.params=graphics2\ img\ x\ y
+comment6.target=void\ draw(java.awt.Graphics2D,\ java.awt.image.BufferedImage,\ int,\ int)
+numComments=7

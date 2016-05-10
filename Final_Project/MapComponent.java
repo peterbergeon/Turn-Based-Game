@@ -1,4 +1,11 @@
 import java.awt.Graphics;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.swing.*;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JComponent;
@@ -14,33 +21,59 @@ public class MapComponent extends JComponent
     private int height;
     private int currentRow;
     private int currentCol;
-    private Box[][] map;
-    private Box currentBox;
-    private Box otherBox;
+    private Tile[][] map;
+    private Tile currentTile;
+    private BufferedImage greenTile;
+    private BufferedImage purpleTile;
+    private BufferedImage blueTile;
+    private BufferedImage redTile;
+    private int row;
+    private int col;
 
-    public MapComponent(int w, int h){
+    public MapComponent(int w, int h, int rows, int cols){
         width = w;
         height = h;
-        map = new Box[51][51];
-        int randomGreen = 0;
-        int randomRed = 0;
-        int randomBlue = 0;
-        currentCol = 25;
-        currentRow = 25;
-        for(int row = 0; row < 51; row++){
-            for(int col = 0; col < 51; col++){
-                randomGreen = (int)(Math.random() * 255 + 1);
-                randomBlue = (int)(Math.random() * 255 + 1);
-                randomRed = (int)(Math.random() * 255 + 1);
+        row = rows;
+        col = cols;
+        map = new Tile[row][col];
+        currentCol = col / 2;
+        currentRow = row / 2;
+        try {
+            greenTile = ImageIO.read(new File("Green Tile.png"));
+        } catch (IOException e) {
+        }
 
-                if(row == 25 && col == 25){
-                    map[row][col] = currentBox = new Box(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),(width/2) - 30, (height/2) - 30);
-                    currentBox.addHero(new Character());
+        try {
+            blueTile = ImageIO.read(new File("Blue Tile.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            redTile = ImageIO.read(new File("Red Tile.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            purpleTile = ImageIO.read(new File("Purple Tile.png"));
+        } catch (IOException e) {
+        }
+
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){ 
+                int randomNum = (int)(Math.random() * 10) + 20;
+                int passable = (int)(Math.random() * 10);
+                if(r == row / 2 && c == col / 2){
+                    map[r][c] = currentTile = new Tile(r, c, 60);
+                    currentTile.addCharacter(new Character("JOAT"));
+                }
+                else if(r % 50 < 3 || c % 50 < 3){
+                    map[r][c] = new Tile(r, c, 60);
+                }
+                else if(passable == 0){
+                    map[r][c] = new Tile(r, c, 1000);
                 }
                 else{
-
-                    map[row][col] = new Box(255 - 2 * (row + col),255 - 2 * (row + col),255 - 2 * (row + col),
-                        ((width/2) + 60 * (row - 25) - 30), ((height/2) + 60 * (col - 25) - 30));
+                    map[r][c] = new Tile(r,c,randomNum);
                 }
             }
         }
@@ -49,9 +82,30 @@ public class MapComponent extends JComponent
 
     public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
-        for(int row = 0; row < 50; row++){
-            for(int col = 0; col < 50; col++){
-                map[row][col].draw(graphics2);
+        int rstart = currentTile.getRow() - 15;
+        if(rstart < 0) rstart = 0;
+        int rend = currentTile.getRow() + 15;
+        if(rend > row) rend = row;
+        int cstart = currentTile.getCol() - 15;
+        if(cstart < 0) cstart = 0;
+        int cend = currentTile.getCol() + 15;
+        if(cend > col) cend = col;
+
+        int x = 0;
+        int y = 0;
+        for(int r = rstart; r < rend; r++){
+            for(int c = cstart; c < cend; c++){
+                x = currentTile.getRow() - map[r][c].getRow();
+                y = currentTile.getCol() - map[r][c].getCol();
+                if(map[r][c].getColor() == 60){
+                    map[r][c].draw(graphics2,purpleTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() >= 1000){
+                    map[r][c].draw(graphics2,blueTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }                   
+                else{
+                    map[r][c].draw(graphics2,greenTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
             }
         }
     }
@@ -61,31 +115,25 @@ public class MapComponent extends JComponent
         int yCenter = (height/2) - 30;
         int xShift = mouseX - xCenter;
         int yShift = mouseY - yCenter;
-        int xBox = 0;
-        int yBox = 0;
+        int xTile = 0;
+        int yTile = 0;
         if(xShift < 0){
-            xBox = (int)((xShift - 60) / 60);
+            xTile = (int)((xShift - 60) / 60);
         }
         else if(xShift >= 0){
-            xBox = (int)((xShift) / 60);
+            xTile = (int)((xShift) / 60);
         }
         if(yShift < 0){
-            yBox = (int)((yShift - 60) / 60);
+            yTile = (int)((yShift - 60) / 60);
         }
         else if(yShift >= 0){
-            yBox = (int)((yShift) / 60);
+            yTile = (int)((yShift) / 60);
         }
-
-        if(currentRow + xBox > -1 && currentRow + xBox < 50 && currentCol + yBox > -1 && currentCol + yBox < 50){            
-            for(int row = 0; row < 50; row++){
-                for(int col = 0; col < 50; col++){
-                    map[row][col].shift(xBox,yBox);
-                }
-            }
-            Character hero = currentBox.getHero();
-            currentBox.addHero(null);
-            currentBox = map[currentRow += xBox][currentCol += yBox];
-            currentBox.addHero(hero);
+        if(map[currentTile.getRow() + xTile][currentTile.getCol() + yTile].getColor() < 1000){
+            Character hero = currentTile.getCharacter();
+            currentTile.addCharacter(null);
+            currentTile = map[currentTile.getRow() + xTile][currentTile.getCol() + yTile];
+            currentTile.addCharacter(hero);
         }
     }
 }

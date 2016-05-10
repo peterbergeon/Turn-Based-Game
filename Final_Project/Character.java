@@ -4,7 +4,6 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
-import java.awt.Color;
 import java.awt.Graphics2D;
 /**
  * Write a description of class Character here.
@@ -14,31 +13,21 @@ import java.awt.Graphics2D;
  */
 public class Character
 {
-    private int level;
-    private String race;
-    private String profession;
     private int hp;
-    private int mp;
-    private int atk;
-    private int df;
+    private int dmg;
+    private int mv;
     BufferedImage img;
-    public Character(){
-        level = 1;
-        race = "human";
-        profession = "warrior";
+    public Character(String str){
         hp = 100;
-        mp = 20;
-        atk = 10;
-        df = 0;
-
+        dmg = 10;
+        mv = 6;
+        try {
+            img = ImageIO.read(new File(str + ".png"));
+        } catch (IOException e) {
+        }
     }
 
     public void draw(Graphics2D g, int x, int y){
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("hero.png"));
-        } catch (IOException e) {
-        }
         g.drawImage(img,x,y,null);
     }
 }
