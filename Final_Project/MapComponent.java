@@ -60,24 +60,24 @@ public class MapComponent extends JComponent
 
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){ 
-                int randomNum = (int)(Math.random() * 10) + 20;
+                int randomNum = (int)(Math.random() * 2) + 1;
                 int passable = (int)(Math.random() * 10);
-                if(r == row / 2 && c == col / 2){
-                    map[r][c] = currentTile = new Tile(r, c, 10);
-                    currentTile.addCharacter(new Character("JOAT"));
-                }
-                else if(r % 50 < 3 || c % 50 < 3){
-                    map[r][c] = new Tile(r, c, 10);
+
+                if(r % 50 < 3 || c % 50 < 3){
+                    map[r][c] = new Tile(r, c, 0, 1);
                 }
                 else if(passable == 0){
-                    map[r][c] = new Tile(r, c, 1000);
+                    map[r][c] = new Tile(r, c, 3, 100);
                 }
                 else{
-                    map[r][c] = new Tile(r,c,randomNum);
+                    map[r][c] = new Tile(r,c,randomNum, 2);
+                }
+                if(r == row / 2 && c == col / 2){
+                    currentTile = map[r][c];
+                    currentTile.addCharacter(new Character("JOAT"));
                 }
             }
         }
-
     }
 
     public void paintComponent(Graphics g) {
@@ -98,13 +98,13 @@ public class MapComponent extends JComponent
             for(int c = cstart; c < cend; c++){
                 x = currentTile.getRow() - map[r][c].getRow();
                 y = currentTile.getCol() - map[r][c].getCol();
-                if(map[r][c].getColor() == 10){
+                if(map[r][c].getColor() == 0){
                     map[r][c].draw(graphics2,redTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
-                else if(map[r][c].getColor() >= 1000){
+                else if(map[r][c].getColor() == 3){
                     map[r][c].draw(graphics2,greenTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
-                else if(map[r][c].getColor() < 25){
+                else if(map[r][c].getColor() == 2){
                     map[r][c].draw(graphics2,purpleTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
                 else{
@@ -144,13 +144,13 @@ public class MapComponent extends JComponent
 
     public void fixDistance(){
         int move = currentTile.getCharacter().getMove();
-        for(int i = currentTile.getRow() - 10; i < currentTile.getRow() + 10; i++){
-            for(int k = currentTile.getCol() - 10; k < currentTile.getCol() + 10; k++){
+        for(int i = currentTile.getRow() - 20; i < currentTile.getRow() + 20; i++){
+            for(int k = currentTile.getCol() - 20; k < currentTile.getCol() + 20; k++){
                 map[i][k].setDistance(100);
             }
         }
         currentTile.setDistance(0);
-        for(int d = 1; d < move + 1; d++){
+        for(int d = 1; d <= move; d++){
             for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
                 for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
                     if(r == currentTile.getRow() - d){
@@ -170,7 +170,7 @@ public class MapComponent extends JComponent
                 }
             }
         }
-        for(int d = 1; d < move + 1; d++){
+        for(int d = 1; d <= move; d++){
             for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
                 for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
                     if(r == currentTile.getRow() - d){
@@ -190,6 +190,7 @@ public class MapComponent extends JComponent
                 }
             }
         }
+        currentTile.setDistance(100);
     }
 
     public void getDistance(String str, Tile other){

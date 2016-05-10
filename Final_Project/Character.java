@@ -20,7 +20,7 @@ public class Character
     public Character(String str){
         hp = 100;
         dmg = 10;
-        mv = 5;
+        mv = 10;
         try {
             img = ImageIO.read(new File(str + ".png"));
         } catch (IOException e) {

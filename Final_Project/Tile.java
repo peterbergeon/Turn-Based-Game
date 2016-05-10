@@ -22,11 +22,11 @@ public class Tile
     private int terrain;
     private int distance;
     private boolean moveable;
-    public Tile(int row, int col, int color){
+    public Tile(int row, int col, int color, int terrain){
         r = row;
         c = col;
         this.color = color;
-        terrain = color / 10;
+        this.terrain = terrain * 2;
         moveable = false;
         distance = 100;
     }

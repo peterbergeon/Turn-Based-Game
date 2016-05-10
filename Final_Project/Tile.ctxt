@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=row\ col\ color
-comment0.target=Tile(int,\ int,\ int)
+comment0.params=row\ col\ color\ terrain
+comment0.target=Tile(int,\ int,\ int,\ int)
 comment1.params=h
 comment1.target=void\ addCharacter(Character)
 comment10.params=
