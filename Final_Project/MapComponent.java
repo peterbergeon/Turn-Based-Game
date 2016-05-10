@@ -62,8 +62,10 @@ public class MapComponent extends JComponent
             for(int c = 0; c < col; c++){ 
                 int randomNum = (int)(Math.random() * 2) + 1;
                 int passable = (int)(Math.random() * 10);
-
-                if(r % 50 < 3 || c % 50 < 3){
+                if(r < 10 || r > row - 10 || c < 10 || c > col - 10){
+                    map[r][c] = new Tile(r, c, 3, 100);
+                }
+                else if(r % 50 < 3 || c % 50 < 3){
                     map[r][c] = new Tile(r, c, 0, 1);
                 }
                 else if(passable == 0){
@@ -144,13 +146,22 @@ public class MapComponent extends JComponent
 
     public void fixDistance(){
         int move = currentTile.getCharacter().getMove();
-        for(int i = currentTile.getRow() - 20; i < currentTile.getRow() + 20; i++){
-            for(int k = currentTile.getCol() - 20; k < currentTile.getCol() + 20; k++){
+        int istart = currentTile.getRow() - 15;
+        if(istart < 0) istart = 0;
+        int iend = currentTile.getRow() + 15;
+        if(iend > row) iend = row;
+        int kstart = currentTile.getCol() - 15;
+        if(kstart < 0) kstart = 0;
+        int kend = currentTile.getCol() + 15;
+        if(kend > col) kend = col;
+
+        for(int i = istart; i < iend; i++){
+            for(int k = kstart; k < kend; k++){
                 map[i][k].setDistance(100);
             }
         }
         currentTile.setDistance(0);
-        for(int d = 1; d <= move; d++){
+        for(int d = 1; d <= move / 2; d++){
             for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
                 for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
                     if(r == currentTile.getRow() - d){

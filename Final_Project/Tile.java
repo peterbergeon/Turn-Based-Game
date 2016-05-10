@@ -84,7 +84,6 @@ public class Tile
         }
         if(getMoveable()){
             Ellipse2D.Double circle = new Ellipse2D.Double(x + 25,y + 25,10,10);
-            graphics2.draw(circle);
             graphics2.setColor(Color.green);
             graphics2.fill(circle);
         }
