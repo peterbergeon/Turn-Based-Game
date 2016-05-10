@@ -20,11 +20,15 @@ public class Character
     public Character(String str){
         hp = 100;
         dmg = 10;
-        mv = 6;
+        mv = 5;
         try {
             img = ImageIO.read(new File(str + ".png"));
         } catch (IOException e) {
         }
+    }
+    
+    public int getMove(){
+        return mv;
     }
 
     public void draw(Graphics2D g, int x, int y){
