@@ -4,7 +4,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import javax.swing.*;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.Color;
 import java.awt.Graphics2D;
 /**
@@ -35,7 +35,7 @@ public class Tile
         thing = h;
         terrain += 1000;
     }
-    
+
     public void removeCharacter(){
         thing = null;
         terrain -= 1000;
@@ -60,32 +60,35 @@ public class Tile
     public void isMoveable(boolean b){
         moveable = b;
     }
-    
+
     public int getTerrain(){
         return terrain;
     }
-    
+
     public boolean getMoveable(){
         return moveable;
     }
-    
+
     public int getDistance(){
         return distance;
     }
-    
+
     public void setDistance(int n){
         distance = n;
     }
 
-    public void draw(Graphics2D graphics2, BufferedImage img, int x, int y){
-        graphics2.drawImage(img,x,y,null);
-        if(thing != null){
-            thing.draw(graphics2,x,y);
-        }
+    public void draw(Graphics2D g2, BufferedImage img, int x, int y){
+        g2.drawImage(img,x,y,null);
         if(getMoveable()){
-            Ellipse2D.Double circle = new Ellipse2D.Double(x + 25,y + 25,10,10);
-            graphics2.setColor(Color.green);
-            graphics2.fill(circle);
+            float thickness = 3;
+            Stroke oldStroke = g2.getStroke();
+            g2.setStroke(new BasicStroke(thickness));
+            g2.setColor(Color.green);
+            g2.drawRect(x + 4, y + 4, 58, 58);
+            g2.setStroke(oldStroke);
+        }
+                if(thing != null){
+            thing.draw(g2,x,y);
         }
     }
 }
