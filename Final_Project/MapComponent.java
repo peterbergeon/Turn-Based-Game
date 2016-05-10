@@ -129,7 +129,8 @@ public class MapComponent extends JComponent
         else if(yShift >= 0){
             yTile = (int)((yShift) / 60);
         }
-        if(map[currentTile.getRow() + xTile][currentTile.getCol() + yTile].getColor() < 1000){
+        if(currentTile.getRow() + xTile > -1 && currentTile.getRow() + xTile < row && currentTile.getCol() + yTile > -1 && 
+        currentTile.getCol() + yTile < col && map[currentTile.getRow() + xTile][currentTile.getCol() + yTile].getColor() < 1000){
             Character hero = currentTile.getCharacter();
             currentTile.addCharacter(null);
             currentTile = map[currentTile.getRow() + xTile][currentTile.getCol() + yTile];
