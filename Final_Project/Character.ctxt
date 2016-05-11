@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=str
-comment0.target=Character(java.lang.String)
+comment0.params=str\ move
+comment0.target=Character(java.lang.String,\ int)
 comment1.params=
 comment1.target=int\ getMove()
 comment2.params=g\ x\ y

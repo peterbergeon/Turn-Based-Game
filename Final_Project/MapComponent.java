@@ -30,6 +30,8 @@ public class MapComponent extends JComponent
     private BufferedImage grass1;
     private BufferedImage grass2;
     private BufferedImage grass3;
+    private BufferedImage wood;
+    private BufferedImage door;
     //     private BufferedImage sideWH;
     //     private BufferedImage sideWV;
     //     private BufferedImage sideWLtT;
@@ -41,7 +43,7 @@ public class MapComponent extends JComponent
     private int row;
     private int col;
 
-    public MapComponent(int w, int h, int rows, int cols){
+    public MapComponent(int w, int h, int rows, int cols, Character you){
         width = w;
         height = h;
         row = rows;
@@ -88,6 +90,16 @@ public class MapComponent extends JComponent
             grass3 = ImageIO.read(new File("Grass3.png"));
         } catch (IOException e) {
         }
+
+        try {
+            wood = ImageIO.read(new File("Wood.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            door = ImageIO.read(new File("Door.png"));
+        } catch (IOException e) {
+        }
         //         try {
         //             sideWH = ImageIO.read(new File("SideWalkH.png"));
         //         } catch (IOException e) {
@@ -113,35 +125,46 @@ public class MapComponent extends JComponent
         //         } catch (IOException e) {
         //         }
         int grass = 0;
+        int randomL = 0;
+        int randomW = 0;
         for(int r = 0; r < row; r++){
-            for(int c = 0; c < col; c++){ 
-                int randomNum = (int)(Math.random() * 2) + 1;
-                int passable = (int)(Math.random() * 10);
-                if(r < 20 || r > row - 20 || c < 20 || c > col - 20){
-                    map[r][c] = new Tile(r,c, 100, 100);
+            for(int c = 0; c < col; c++){
+                if(map[r][c] == null){
+                    if(r < 20 || r > row - 20 || c < 20 || c > col - 20){
+                        map[r][c] = new Tile(r,c, 100, 100);
+                    }
+                    else if(r % 100 == 40 && c % 100 == 40){
+                        randomL = (int)(Math.random() * 10 + 11);
+                        randomW = (int)(Math.random() * 10 + 11);
+                        Room room = new Room(r,c,randomW,randomL,"Simple House", you.getMove());
+                        for(int i = 0; i < randomW; i++){
+                            for(int k = 0; k < randomL; k++){
+                                map[r + i][c + k] = room.getTile(i,k);
+                            }
+                        }
+                    }
+                    else if(r % 100 < 5 || c % 100 < 5){
+                        if(r % 100 == 2){
+                            map[r][c] = new Tile(r, c, 1, 1);
+                        }
+                        else if(c % 100 == 2){
+                            map[r][c] = new Tile(r, c, 2, 1);
+                        }
+                        else if(((r % 100 == 0 || r % 100 == 4) && (c % 100 > 3 || c % 100 == 0)) || ((c % 100 == 0 || c % 100 == 4) && (r % 100 > 3 || r % 100 == 0))){
+                            map[r][c] = new Tile(r, c, 3, 1);
+                        }
+                        else {
+                            map[r][c] = new Tile(r, c, 0, 1);
+                        }
+                    }
+                    else{
+                        grass = (int)((Math.random() * 3) + 10);
+                        map[r][c] = new Tile(r,c, grass, 2);
+                    }
                 }
-                else if(r % 50 < 5 || c % 50 < 5){
-                    if(r % 50 == 2){
-                        map[r][c] = new Tile(r, c, 1, 1);
-                    }
-                    else if(c % 50 == 2){
-                        map[r][c] = new Tile(r, c, 2, 1);
-                    }
-                    else if(((r % 50 == 0 || r % 50 == 4) && (c % 50 > 3 || c % 50 == 0)) || ((c % 50 == 0 || c % 50 == 4) && (r % 50 > 3 || r % 50 == 0))){
-                        map[r][c] = new Tile(r, c, 3, 1);
-                    }
-                    else {
-                        map[r][c] = new Tile(r, c, 0, 1);
-                    }
-                }
-                else{
-                    grass = (int)((Math.random() * 3) + 10);
-                    map[r][c] = new Tile(r,c, grass, 2);
-                }
-
                 if(r == row / 2 && c == col / 2){
                     currentTile = map[r][c];
-                    currentTile.addCharacter(new Character("JOAT"));
+                    currentTile.addCharacter(you);
                 }
             }
         }
@@ -185,6 +208,12 @@ public class MapComponent extends JComponent
                 }
                 else if(map[r][c].getColor() == 12){
                     map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 15){
+                    map[r][c].draw(graphics2,wood,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 16){
+                    map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
                 //                 else if(map[r][c].getColor() == 4){
                 //                     map[r][c].draw(graphics2,sideWH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));

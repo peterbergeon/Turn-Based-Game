@@ -17,10 +17,10 @@ public class Character
     private int dmg;
     private int mv;
     BufferedImage img;
-    public Character(String str){
+    public Character(String str, int move){
         hp = 100;
         dmg = 10;
-        mv = 10;
+        mv = move * 2;
         try {
             img = ImageIO.read(new File(str + ".png"));
         } catch (IOException e) {

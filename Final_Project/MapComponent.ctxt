@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=w\ h\ rows\ cols
-comment0.target=MapComponent(int,\ int,\ int,\ int)
+comment0.params=w\ h\ rows\ cols\ you
+comment0.target=MapComponent(int,\ int,\ int,\ int,\ Character)
 comment1.params=g
 comment1.target=void\ paintComponent(java.awt.Graphics)
 comment2.params=mouseX\ mouseY
