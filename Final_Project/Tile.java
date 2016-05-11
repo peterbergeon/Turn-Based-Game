@@ -80,11 +80,11 @@ public class Tile
     public void draw(Graphics2D g2, BufferedImage img, int x, int y){
         g2.drawImage(img,x,y,null);
         if(getMoveable()){
-            float thickness = 3;
+            float thickness = 4;
             Stroke oldStroke = g2.getStroke();
             g2.setStroke(new BasicStroke(thickness));
             g2.setColor(Color.green);
-            g2.drawRect(x + 4, y + 4, 58, 58);
+            g2.drawRect(x + 2, y + 2, 56, 56);
             g2.setStroke(oldStroke);
         }
                 if(thing != null){

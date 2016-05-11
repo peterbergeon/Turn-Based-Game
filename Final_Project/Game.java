@@ -10,10 +10,6 @@ import javax.imageio.ImageIO;
 import java.awt.Toolkit;
 import java.awt.Cursor;
 import java.awt.MouseInfo;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent; 
-import java.awt.event.MouseMotionListener;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
@@ -52,7 +48,7 @@ public class Game extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height, 500, 500);
+        MapComponent play = new MapComponent(width, height, 1000, 1000);
 
 
         class MousePressListener implements MouseListener

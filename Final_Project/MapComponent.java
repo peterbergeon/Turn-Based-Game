@@ -23,10 +23,21 @@ public class MapComponent extends JComponent
     private int currentCol;
     private Tile[][] map;
     private Tile currentTile;
-    private BufferedImage greenTile;
-    private BufferedImage purpleTile;
-    private BufferedImage blueTile;
-    private BufferedImage redTile;
+    private BufferedImage road;
+    private BufferedImage roadV;
+    private BufferedImage roadH;
+    private BufferedImage sideW;
+    private BufferedImage grass1;
+    private BufferedImage grass2;
+    private BufferedImage grass3;
+    //     private BufferedImage sideWH;
+    //     private BufferedImage sideWV;
+    //     private BufferedImage sideWLtT;
+    //     private BufferedImage sideWRtT;
+    //     private BufferedImage sideWLtD;
+    //     private BufferedImage sideWRtD;
+    //     private BufferedImage sideW;
+    private BufferedImage wall;
     private int row;
     private int col;
 
@@ -39,41 +50,95 @@ public class MapComponent extends JComponent
         currentCol = col / 2;
         currentRow = row / 2;
         try {
-            greenTile = ImageIO.read(new File("Green Tile.png"));
+            wall = ImageIO.read(new File("Wall.png"));
         } catch (IOException e) {
         }
 
         try {
-            blueTile = ImageIO.read(new File("Blue Tile.png"));
+            road = ImageIO.read(new File("Road.png"));
         } catch (IOException e) {
         }
 
         try {
-            redTile = ImageIO.read(new File("Red Tile.png"));
+            roadV = ImageIO.read(new File("RoadV.png"));
         } catch (IOException e) {
         }
 
         try {
-            purpleTile = ImageIO.read(new File("Purple Tile.png"));
+            roadH = ImageIO.read(new File("RoadH.png"));
         } catch (IOException e) {
         }
 
+        try {
+            sideW = ImageIO.read(new File("SideWalk4.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            grass1 = ImageIO.read(new File("Grass1.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            grass2 = ImageIO.read(new File("Grass2.png"));
+        } catch (IOException e) {
+        }
+
+        try {
+            grass3 = ImageIO.read(new File("Grass3.png"));
+        } catch (IOException e) {
+        }
+        //         try {
+        //             sideWH = ImageIO.read(new File("SideWalkH.png"));
+        //         } catch (IOException e) {
+        //         }
+        // 
+        //         try {
+        //             sideWRtT = ImageIO.read(new File("SideWalkRtD.png"));
+        //         } catch (IOException e) {
+        //         }
+        // 
+        //         try {
+        //             sideWRtD = ImageIO.read(new File("SideWalkRtB.png"));
+        //         } catch (IOException e) {
+        //         }
+        // 
+        //         try {
+        //             sideWLtT = ImageIO.read(new File("SideWalkLtT.png"));
+        //         } catch (IOException e) {
+        //         }
+        // 
+        //         try {
+        //             sideWLtD = ImageIO.read(new File("SideWalkLtD.png"));
+        //         } catch (IOException e) {
+        //         }
+        int grass = 0;
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){ 
                 int randomNum = (int)(Math.random() * 2) + 1;
                 int passable = (int)(Math.random() * 10);
-                if(r < 10 || r > row - 10 || c < 10 || c > col - 10){
-                    map[r][c] = new Tile(r, c, 3, 100);
+                if(r < 20 || r > row - 20 || c < 20 || c > col - 20){
+                    map[r][c] = new Tile(r,c, 100, 100);
                 }
-                else if(r % 50 < 3 || c % 50 < 3){
-                    map[r][c] = new Tile(r, c, 0, 1);
-                }
-                else if(passable == 0){
-                    map[r][c] = new Tile(r, c, 3, 100);
+                else if(r % 50 < 5 || c % 50 < 5){
+                    if(r % 50 == 2){
+                        map[r][c] = new Tile(r, c, 1, 1);
+                    }
+                    else if(c % 50 == 2){
+                        map[r][c] = new Tile(r, c, 2, 1);
+                    }
+                    else if(((r % 50 == 0 || r % 50 == 4) && (c % 50 > 3 || c % 50 == 0)) || ((c % 50 == 0 || c % 50 == 4) && (r % 50 > 3 || r % 50 == 0))){
+                        map[r][c] = new Tile(r, c, 3, 1);
+                    }
+                    else {
+                        map[r][c] = new Tile(r, c, 0, 1);
+                    }
                 }
                 else{
-                    map[r][c] = new Tile(r,c,randomNum, 2);
+                    grass = (int)((Math.random() * 3) + 10);
+                    map[r][c] = new Tile(r,c, grass, 2);
                 }
+
                 if(r == row / 2 && c == col / 2){
                     currentTile = map[r][c];
                     currentTile.addCharacter(new Character("JOAT"));
@@ -101,16 +166,43 @@ public class MapComponent extends JComponent
                 x = currentTile.getRow() - map[r][c].getRow();
                 y = currentTile.getCol() - map[r][c].getCol();
                 if(map[r][c].getColor() == 0){
-                    map[r][c].draw(graphics2,redTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
-                else if(map[r][c].getColor() == 3){
-                    map[r][c].draw(graphics2,greenTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                else if(map[r][c].getColor() == 1){
+                    map[r][c].draw(graphics2,roadV,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
                 else if(map[r][c].getColor() == 2){
-                    map[r][c].draw(graphics2,purpleTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    map[r][c].draw(graphics2,roadH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
+                else if(map[r][c].getColor() == 3){
+                    map[r][c].draw(graphics2,sideW,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }              
+                else if(map[r][c].getColor() == 10){
+                    map[r][c].draw(graphics2,grass1,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 11){
+                    map[r][c].draw(graphics2,grass2,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 12){
+                    map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                //                 else if(map[r][c].getColor() == 4){
+                //                     map[r][c].draw(graphics2,sideWH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                //                 }
+                //                 else if(map[r][c].getColor() == 5){
+                //                     map[r][c].draw(graphics2,sideWRtT,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                //                 }
+                //                 else if(map[r][c].getColor() == 6){
+                //                     map[r][c].draw(graphics2,sideWRtD,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                //                 }
+                //                 else if(map[r][c].getColor() == 7){
+                //                     map[r][c].draw(graphics2,sideWLtT,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                //                 }
+                //                 else if(map[r][c].getColor() == 8){
+                //                     map[r][c].draw(graphics2,sideWLtD,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                //                 }
                 else{
-                    map[r][c].draw(graphics2,blueTile,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    map[r][c].draw(graphics2,wall,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
             }
         }
