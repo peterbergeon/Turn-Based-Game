@@ -32,6 +32,7 @@ public class MapComponent extends JComponent
     private BufferedImage grass3;
     private BufferedImage wood;
     private BufferedImage door;
+    private BufferedImage mud;
     //     private BufferedImage sideWH;
     //     private BufferedImage sideWV;
     //     private BufferedImage sideWLtT;
@@ -100,6 +101,11 @@ public class MapComponent extends JComponent
             door = ImageIO.read(new File("Door.png"));
         } catch (IOException e) {
         }
+
+        try {
+            mud = ImageIO.read(new File("Mud.png"));
+        } catch (IOException e) {
+        }
         //         try {
         //             sideWH = ImageIO.read(new File("SideWalkH.png"));
         //         } catch (IOException e) {
@@ -159,19 +165,24 @@ public class MapComponent extends JComponent
                         }
                     }
                     else{
-                        grass = (int)((Math.random() * 3) + 10);
-                        map[r][c] = new Tile(r,c, grass, 4);
+                        grass = (int)((Math.random() * 6) + 10);
+                        if(grass < 13){
+                            map[r][c] = new Tile(r,c, grass, 4);
+                        }
+                        else{
+                            map[r][c] = new Tile(r,c, 17, 7);
+                        }
                     }
-                }
-                if(r == row / 2 && c == col / 2){
-                    currentTile = map[r][c];
-                    currentTile.addCharacter(you);
+                    if(r == row / 2 && c == col / 2){
+                        currentTile = map[r][c];
+                        currentTile.addCharacter(you);
+                    }
                 }
             }
         }
     }
 
-    public void paintComponent(Graphics g) {
+        public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
         int rstart = currentTile.getRow() - 15;
         if(rstart < 0) rstart = 0;
@@ -215,6 +226,9 @@ public class MapComponent extends JComponent
                 }
                 else if(map[r][c].getColor() == 16){
                     map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 17){
+                    map[r][c].draw(graphics2,mud,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
                 //                 else if(map[r][c].getColor() == 4){
                 //                     map[r][c].draw(graphics2,sideWH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));

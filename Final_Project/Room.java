@@ -25,7 +25,7 @@ public class Room
                         map[row][col] = new Tile(row + r, col + c, 100, 100);//wall
                     }
                     else{
-                        map[row][col] = new Tile(row + r, col + c, 15,1);//floor
+                        map[row][col] = new Tile(row + r, col + c, 15,3);//floor
                     }
                 }
             }
