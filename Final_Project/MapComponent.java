@@ -127,6 +127,7 @@ public class MapComponent extends JComponent
         int grass = 0;
         int randomL = 0;
         int randomW = 0;
+        Room room = new Room("Simple House", you.getMove());
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
                 if(map[r][c] == null){
@@ -136,7 +137,7 @@ public class MapComponent extends JComponent
                     else if(r % 100 == 40 && c % 100 == 40){
                         randomL = (int)(Math.random() * 10 + 11);
                         randomW = (int)(Math.random() * 10 + 11);
-                        Room room = new Room(r,c,randomW,randomL,"Simple House", you.getMove());
+                        room.changeRoom(r,c,randomW,randomL);
                         for(int i = 0; i < randomW; i++){
                             for(int k = 0; k < randomL; k++){
                                 map[r + i][c + k] = room.getTile(i,k);
@@ -145,21 +146,21 @@ public class MapComponent extends JComponent
                     }
                     else if(r % 100 < 5 || c % 100 < 5){
                         if(r % 100 == 2){
-                            map[r][c] = new Tile(r, c, 1, 1);
+                            map[r][c] = new Tile(r, c, 1, 3);
                         }
                         else if(c % 100 == 2){
-                            map[r][c] = new Tile(r, c, 2, 1);
+                            map[r][c] = new Tile(r, c, 2, 3);
                         }
                         else if(((r % 100 == 0 || r % 100 == 4) && (c % 100 > 3 || c % 100 == 0)) || ((c % 100 == 0 || c % 100 == 4) && (r % 100 > 3 || r % 100 == 0))){
-                            map[r][c] = new Tile(r, c, 3, 1);
+                            map[r][c] = new Tile(r, c, 3, 3);
                         }
                         else {
-                            map[r][c] = new Tile(r, c, 0, 1);
+                            map[r][c] = new Tile(r, c, 0, 3);
                         }
                     }
                     else{
                         grass = (int)((Math.random() * 3) + 10);
-                        map[r][c] = new Tile(r,c, grass, 2);
+                        map[r][c] = new Tile(r,c, grass, 4);
                     }
                 }
                 if(r == row / 2 && c == col / 2){

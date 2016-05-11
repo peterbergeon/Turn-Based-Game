@@ -48,7 +48,7 @@ public class Game extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height, 1000, 1000, new Character("JOAT",5));
+        MapComponent play = new MapComponent(width, height, 2000, 2000, new Character("JOAT",5));
 
 
         class MousePressListener implements MouseListener

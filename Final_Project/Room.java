@@ -7,9 +7,14 @@
  */
 public class Room
 {
-    private Tile[][] map;  
+    private Tile[][] map; 
+    private String str;
+    private int mv;
+    
     public Room(int r, int c, int w, int l, String t, int m){
         map = new Tile[w][l];
+        str = t;
+        mv = m;
         if(t.equals("Simple House")){
             for(int row = 0; row < w; row++){
                 for(int col = 0; col < l; col++){
@@ -25,6 +30,19 @@ public class Room
                 }
             }
         }
+    }  
+    
+    public Room(String str, int m){
+        this(1,1,1,1,str,m);
+    }
+    
+    public Tile[][] getMap(){
+        return map;
+    }
+    
+    public void changeRoom(int r, int c, int w, int l){
+        Room other = new Room(r,c,w,l,this.str,this.mv);
+        map = other.getMap();
     }
 
     public Tile getTile(int row, int col){
