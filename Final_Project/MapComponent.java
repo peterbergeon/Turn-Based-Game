@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.awt.Color;
 import javax.swing.JComponent;
 /**
  * Write a description of class MapComponent here.
@@ -23,6 +24,7 @@ public class MapComponent extends JComponent
     private int currentCol;
     private Tile[][] map;
     private Tile currentTile;
+    private Character you;
     private BufferedImage road;
     private BufferedImage roadV;
     private BufferedImage roadH;
@@ -45,13 +47,14 @@ public class MapComponent extends JComponent
     private int col;
 
     public MapComponent(int w, int h, int rows, int cols, Character you){
+        map = new Tile[rows][cols];
         width = w;
         height = h;
+        currentRow = w/2;
+        currentCol = h/2;
+        this.you = you;
         row = rows;
         col = cols;
-        map = new Tile[row][col];
-        currentCol = col / 2;
-        currentRow = row / 2;
         try {
             wall = ImageIO.read(new File("Wall.png"));
         } catch (IOException e) {
@@ -106,147 +109,185 @@ public class MapComponent extends JComponent
             mud = ImageIO.read(new File("Mud.png"));
         } catch (IOException e) {
         }
-        //         try {
-        //             sideWH = ImageIO.read(new File("SideWalkH.png"));
-        //         } catch (IOException e) {
-        //         }
-        // 
-        //         try {
-        //             sideWRtT = ImageIO.read(new File("SideWalkRtD.png"));
-        //         } catch (IOException e) {
-        //         }
-        // 
-        //         try {
-        //             sideWRtD = ImageIO.read(new File("SideWalkRtB.png"));
-        //         } catch (IOException e) {
-        //         }
-        // 
-        //         try {
-        //             sideWLtT = ImageIO.read(new File("SideWalkLtT.png"));
-        //         } catch (IOException e) {
-        //         }
-        // 
-        //         try {
-        //             sideWLtD = ImageIO.read(new File("SideWalkLtD.png"));
-        //         } catch (IOException e) {
-        //         }
-        int grass = 0;
-        int randomL = 0;
-        int randomW = 0;
-        Room room = new Room("Simple House", you.getMove());
-        for(int r = 0; r < row; r++){
-            for(int c = 0; c < col; c++){
-                if(map[r][c] == null){
-                    if(r < 20 || r > row - 20 || c < 20 || c > col - 20){
-                        map[r][c] = new Tile(r,c, 100, 100);
+    }
+
+    public void expand(int m, Tile current, int type){
+        int random = (int)(Math.random() * 4);
+        int ran = (int)(Math.random() * 10 + 1);
+        while((map[current.getRow() - 1][current.getCol()] == null || map[current.getRow() + 1][current.getCol()] == null || 
+            map[current.getRow()][current.getCol() + 1] == null || map[current.getRow()][current.getCol() - 1] == null )&& m > 0) {
+            if(random == 0){
+                if(map[current.getRow() - 1][current.getCol()] == null){
+                    map[current.getRow() - 1][current.getCol()] = new Tile(current.getRow() - 1, current.getCol(), type, 4);
+                    expand(m - ran, map[current.getRow() - 1][current.getCol()], type);
+                }
+                else{random++;}
+                if(random == 1){
+                    if(map[current.getRow() + 1][current.getCol()] == null){
+                        map[current.getRow() + 1][current.getCol()] = new Tile(current.getRow() + 1, current.getCol(), type, 4);
+                        expand(m - ran, map[current.getRow() - 1][current.getCol()], type);
                     }
-                    else if(r % 100 == 40 && c % 100 == 40){
-                        randomL = (int)(Math.random() * 10 + 11);
-                        randomW = (int)(Math.random() * 10 + 11);
-                        room.changeRoom(r,c,randomW,randomL);
-                        for(int i = 0; i < randomW; i++){
-                            for(int k = 0; k < randomL; k++){
-                                map[r + i][c + k] = room.getTile(i,k);
+                    else{random++;}
+                    if(random == 2){
+                        if(map[current.getRow()][current.getCol() + 1] == null){
+                            map[current.getRow()][current.getCol() + 1] = new Tile(current.getRow(), current.getCol() + 1, type, 4);
+                            expand(m - ran, map[current.getRow()][current.getCol() + 1], type);
+                        }
+                        else{random++;}
+                        if(random == 3){
+                            if(map[current.getRow()][current.getCol() - 1] == null){
+                                map[current.getRow()][current.getCol() - 1] = new Tile(current.getRow(), current.getCol() - 1, type, 4);
+                                expand(m - ran, map[current.getRow()][current.getCol() - 1], type);
                             }
+                            else{random = 0;}
                         }
-                    }
-                    else if(r % 100 < 5 || c % 100 < 5){
-                        if(r % 100 == 2){
-                            map[r][c] = new Tile(r, c, 1, 3);
-                        }
-                        else if(c % 100 == 2){
-                            map[r][c] = new Tile(r, c, 2, 3);
-                        }
-                        else if(((r % 100 == 0 || r % 100 == 4) && (c % 100 > 3 || c % 100 == 0)) || ((c % 100 == 0 || c % 100 == 4) && (r % 100 > 3 || r % 100 == 0))){
-                            map[r][c] = new Tile(r, c, 3, 3);
-                        }
-                        else {
-                            map[r][c] = new Tile(r, c, 0, 3);
-                        }
-                    }
-                    else{
-                        grass = (int)((Math.random() * 6) + 10);
-                        if(grass < 13){
-                            map[r][c] = new Tile(r,c, grass, 4);
-                        }
-                        else{
-                            map[r][c] = new Tile(r,c, 17, 7);
-                        }
-                    }
-                    if(r == row / 2 && c == col / 2){
-                        currentTile = map[r][c];
-                        currentTile.addCharacter(you);
                     }
                 }
             }
         }
     }
 
-        public void paintComponent(Graphics g) {
-        Graphics2D graphics2 = (Graphics2D)g;
-        int rstart = currentTile.getRow() - 15;
-        if(rstart < 0) rstart = 0;
-        int rend = currentTile.getRow() + 15;
-        if(rend > row) rend = row;
-        int cstart = currentTile.getCol() - 15;
-        if(cstart < 0) cstart = 0;
-        int cend = currentTile.getCol() + 15;
-        if(cend > col) cend = col;
-
-        int x = 0;
-        int y = 0;
-        fixDistance();
-        for(int r = rstart; r < rend; r++){
-            for(int c = cstart; c < cend; c++){
-                x = currentTile.getRow() - map[r][c].getRow();
-                y = currentTile.getCol() - map[r][c].getCol();
-                if(map[r][c].getColor() == 0){
-                    map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+    public void createMap(){
+        int grass = 0;
+        int randomRow = 0;
+        int randomCol = 0;
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){
+                grass = (int)((Math.random() * 6) + 10);
+                if(grass < 13){
+                    map[r][c] = new Tile(r,c, grass, 4);
                 }
-                else if(map[r][c].getColor() == 1){
-                    map[r][c].draw(graphics2,roadV,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 2){
-                    map[r][c].draw(graphics2,roadH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 3){
-                    map[r][c].draw(graphics2,sideW,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }              
-                else if(map[r][c].getColor() == 10){
-                    map[r][c].draw(graphics2,grass1,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 11){
-                    map[r][c].draw(graphics2,grass2,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 12){
-                    map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 15){
-                    map[r][c].draw(graphics2,wood,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 16){
-                    map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                else if(map[r][c].getColor() == 17){
-                    map[r][c].draw(graphics2,mud,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                }
-                //                 else if(map[r][c].getColor() == 4){
-                //                     map[r][c].draw(graphics2,sideWH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                //                 }
-                //                 else if(map[r][c].getColor() == 5){
-                //                     map[r][c].draw(graphics2,sideWRtT,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                //                 }
-                //                 else if(map[r][c].getColor() == 6){
-                //                     map[r][c].draw(graphics2,sideWRtD,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                //                 }
-                //                 else if(map[r][c].getColor() == 7){
-                //                     map[r][c].draw(graphics2,sideWLtT,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                //                 }
-                //                 else if(map[r][c].getColor() == 8){
-                //                     map[r][c].draw(graphics2,sideWLtD,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                //                 }
                 else{
-                    map[r][c].draw(graphics2,wall,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    map[r][c] = new Tile(r,c, 17, 7);
+                }
+            }
+        }
+    }
+
+    public void createWall(){
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){
+                if(r < 20 || r > (row - 20) || (c < 20) || (c > col - 20)){
+                    map[r][c] = new Tile(r,c, 100, 100);
+                }
+            }
+        }
+    }
+
+    public void createRoom(){
+        int randomL = 0;
+        int randomW = 0;
+        Room room = new Room("Simple House", you.getMove());
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){
+                if(r % 100 == 40 && c % 100 == 40){
+                    randomL = (int)(Math.random() * 10 + 11);
+                    randomW = (int)(Math.random() * 10 + 11);
+                    room.changeRoom(r,c,randomW,randomL);
+                    for(int i = 0; i < randomW; i++){
+                        for(int k = 0; k < randomL; k++){
+                            map[r + i][c + k] = room.getTile(i,k);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void createRoad(){
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){
+                if(r % 100 < 5 || c % 100 < 5){
+                    if(r % 100 == 2){
+                        map[r][c] = new Tile(r, c, 1, 3);
+                    }
+                    else if(c % 100 == 2){
+                        map[r][c] = new Tile(r, c, 2, 3);
+                    }
+                    else if(((r % 100 == 0 || r % 100 == 4) && (c % 100 > 3 || c % 100 == 0)) || ((c % 100 == 0 || c % 100 == 4) && (r % 100 > 3 || r % 100 == 0))){
+                        map[r][c] = new Tile(r, c, 3, 3);
+                    }
+                    else {
+                        map[r][c] = new Tile(r, c, 0, 3);
+                    }
+                }
+            }
+        }
+    }
+
+    public void createCharacter(){
+        currentTile = map[row/2][col/2];
+        currentTile.addCharacter(you);
+    }
+
+    public boolean empty(){
+        for(int i = 0; i < row; i++){
+            for(int k = 0; k < col; k++){
+                if(map[i][k] == null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void paintComponent(Graphics g) {
+        Graphics2D graphics2 = (Graphics2D)g;
+        fixDistance();
+        if(map[100][100] == null){
+            graphics2.setColor(Color.green);
+            graphics2.drawRect(500, 500, 500, 40);
+            graphics2.setColor(Color.red);
+            graphics2.fillRect(501, 501, 498, 38);            
+        }
+        else{
+            int rstart = currentTile.getRow() - 20;
+            if(rstart < 0) rstart = 0;
+            int rend = currentTile.getRow() + 20;
+            if(rend > row) rend = row;
+            int cstart = currentTile.getCol() - 20;
+            if(cstart < 0) cstart = 0;
+            int cend = currentTile.getCol() + 20;
+            if(cend > col) cend = col;
+            int x = 0;
+            int y = 0;
+            for(int r = rstart; r < rend; r++){
+                for(int c = cstart; c < cend; c++){
+                    x = currentTile.getRow() - map[r][c].getRow();
+                    y = currentTile.getCol() - map[r][c].getCol();
+                    if(map[r][c].getColor() == 0){
+                        map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 1){
+                        map[r][c].draw(graphics2,roadV,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 2){
+                        map[r][c].draw(graphics2,roadH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 3){
+                        map[r][c].draw(graphics2,sideW,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }              
+                    else if(map[r][c].getColor() == 10){
+                        map[r][c].draw(graphics2,grass1,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 11){
+                        map[r][c].draw(graphics2,grass2,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 12){
+                        map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 15){
+                        map[r][c].draw(graphics2,wood,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 16){
+                        map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else if(map[r][c].getColor() == 17){
+                        map[r][c].draw(graphics2,mud,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
+                    else{
+                        map[r][c].draw(graphics2,wall,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                    }
                 }
             }
         }
@@ -282,13 +323,13 @@ public class MapComponent extends JComponent
 
     public void fixDistance(){
         int move = currentTile.getCharacter().getMove();
-        int istart = currentTile.getRow() - 15;
+        int istart = currentTile.getRow() - 30;
         if(istart < 0) istart = 0;
-        int iend = currentTile.getRow() + 15;
+        int iend = currentTile.getRow() + 30;
         if(iend > row) iend = row;
-        int kstart = currentTile.getCol() - 15;
+        int kstart = currentTile.getCol() - 30;
         if(kstart < 0) kstart = 0;
-        int kend = currentTile.getCol() + 15;
+        int kend = currentTile.getCol() + 30;
         if(kend > col) kend = col;
 
         for(int i = istart; i < iend; i++){
@@ -297,7 +338,7 @@ public class MapComponent extends JComponent
             }
         }
         currentTile.setDistance(0);
-        for(int d = 1; d <= move / 2; d++){
+        for(int d = 1; d <= move / 6; d++){
             for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
                 for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
                     if(r == currentTile.getRow() - d){
@@ -317,7 +358,7 @@ public class MapComponent extends JComponent
                 }
             }
         }
-        for(int d = 1; d <= move; d++){
+        for(int d = 1; d <= move / 6; d++){
             for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
                 for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
                     if(r == currentTile.getRow() - d){
@@ -332,12 +373,16 @@ public class MapComponent extends JComponent
                     else if(c == currentTile.getCol() + d){
                         getDistance("right",map[r][c]);
                     }
-                    if(map[r][c].getDistance() <= move) map[r][c].isMoveable(true);
-                    else map[r][c].isMoveable(false);
                 }
             }
         }
-        currentTile.setDistance(100);
+        for(int w = 0; w < row; w++){
+            for(int u = 0; u < col; u++){
+                if(map[w][u].getDistance() <= move) map[w][u].isMoveable(true);
+                else map[w][u].isMoveable(false);
+            }
+        }
+        currentTile.isMoveable(false);
     }
 
     public void getDistance(String str, Tile other){

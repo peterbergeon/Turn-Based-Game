@@ -2,5 +2,5 @@
 comment0.params=args
 comment0.target=void\ main(java.lang.String[])
 comment1.params=
-comment1.target=Game()
+comment1.target=GameRunner()
 numComments=2

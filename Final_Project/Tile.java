@@ -89,6 +89,8 @@ public class Tile
         }
                 if(thing != null){
             thing.draw(g2,x,y);
+            g2.drawString("Current Row : " + ("" + r), 0, 100);
+            g2.drawString("Current Col : " + ("" + c), 0, 200);
         }
     }
 }

@@ -26,16 +26,16 @@ import java.io.IOException;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Game extends JFrame
+public class GameRunner extends JFrame
 {
     private int mouseX;
     private int mouseY;
 
     public static void main(String[] args){
-        Game game = new Game();
+        GameRunner game = new GameRunner();
     }
 
-    public Game(){
+    public GameRunner(){
         super(); //calling constructer of JFrame class, which extends Frame
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -48,9 +48,14 @@ public class Game extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height, 2000, 2000, new Character("JOAT",5));
-
-
+        MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5));
+        play.repaint();
+        play.createMap();
+        play.createRoom();
+        play.createRoad();
+        play.createCharacter();
+        play.createWall();
+        play.repaint();
         class MousePressListener implements MouseListener
         {
             public void mouseReleased(MouseEvent event) {
