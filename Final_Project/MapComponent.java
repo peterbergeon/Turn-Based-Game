@@ -233,7 +233,6 @@ public class MapComponent extends JComponent
 
     public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
-        fixDistance();
         if(map[100][100] == null){
             graphics2.setColor(Color.green);
             graphics2.drawRect(500, 500, 500, 40);
@@ -319,6 +318,7 @@ public class MapComponent extends JComponent
             currentTile = map[currentTile.getRow() + xTile][currentTile.getCol() + yTile];
             currentTile.addCharacter(hero);
         }
+        fixDistance();
     }
 
     public void fixDistance(){
@@ -334,101 +334,51 @@ public class MapComponent extends JComponent
 
         for(int i = istart; i < iend; i++){
             for(int k = kstart; k < kend; k++){
-                map[i][k].setDistance(100);
+                map[i][k].setDistance(1000);
             }
         }
         currentTile.setDistance(0);
-        for(int d = 1; d <= move / 6; d++){
-            for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
-                for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
-                    if(r == currentTile.getRow() - d){
-                        getDistance("top",map[r][c]);
-                    }
-                    else if(r == currentTile.getRow() + d){
-                        getDistance("bot",map[r][c]);
-                    }
-                    else if(c == currentTile.getCol() - d){
-                        getDistance("left",map[r][c]);
-                    }
-                    else if(c == currentTile.getCol() + d){
-                        getDistance("right",map[r][c]);
-                    }
-                    if(map[r][c].getDistance() <= move) map[r][c].isMoveable(true);
-                    else map[r][c].isMoveable(false);
-                }
-            }
-        }
-        for(int d = 1; d <= move / 6; d++){
-            for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
-                for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
-                    if(r == currentTile.getRow() - d){
-                        getDistance("top",map[r][c]);
-                    }
-                    else if(r == currentTile.getRow() + d){
-                        getDistance("bot",map[r][c]);
-                    }
-                    else if(c == currentTile.getCol() - d){
-                        getDistance("left",map[r][c]);
-                    }
-                    else if(c == currentTile.getCol() + d){
-                        getDistance("right",map[r][c]);
+        for(int w = 0; w < 10; w++){
+            for(int d = 1; d <= move / 2; d++){
+                for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
+                    for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
+                        if(r == currentTile.getRow() + d || c == currentTile.getCol() + d || r == currentTile.getRow() - d || c == currentTile.getCol() - d){
+                            getDistance(map[r][c]);
+                        }
+                        if(map[r][c].getDistance() <= move) map[r][c].isMoveable(true);
+                        else map[r][c].isMoveable(false);
                     }
                 }
-            }
-        }
-        for(int w = 0; w < row; w++){
-            for(int u = 0; u < col; u++){
-                if(map[w][u].getDistance() <= move) map[w][u].isMoveable(true);
-                else map[w][u].isMoveable(false);
             }
         }
         currentTile.isMoveable(false);
     }
 
-    public void getDistance(String str, Tile other){
-        if(str.equals("top")){
-            if(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain());
-            }
+    public void getDistance(Tile other){
+        if(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain());
         }
-        else if(str.equals("bot")){
-            if(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain());
-            }
+        if(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain());
         }
-        else if(str.equals("left")){
-            if(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain());
-            }
+        if(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain());
         }
-        else if(str.equals("right")){
-            if(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain());
-            }
-            if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
-                other.setDistance(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain());
-            }
+        if(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain());
+        }
+        if(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain());
+        }
+        if(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain());
+        }
+        if(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain());
+        }
+        if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+            other.setDistance(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain());
         }
     }
 }
+

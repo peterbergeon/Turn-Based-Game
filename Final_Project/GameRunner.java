@@ -49,12 +49,28 @@ public class GameRunner extends JFrame
         JPanel panel = new JPanel(true);
 
         MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5));
+                play.createMap();
+        play.createCharacter();
+        play.setPreferredSize(new Dimension(width, height));
+        play.setBounds(0, 0, width, height);
+        play.setFocusable(true);
+
+        panel.setLayout(null);
+
+        panel.add(play);
+        this.add(panel);
+
+        this.setVisible(true);
+
+        setResizable(false);
+        play.requestFocus();
+        this.setVisible(true);
         play.repaint();
-        play.createMap();
         play.createRoom();
         play.createRoad();
         play.createCharacter();
         play.createWall();
+        play.fixDistance();
         play.repaint();
         class MousePressListener implements MouseListener
         {
@@ -75,20 +91,6 @@ public class GameRunner extends JFrame
 
             public void mouseExited(MouseEvent event) {}
         }
-        play.setPreferredSize(new Dimension(width, height));
-        play.setBounds(0, 0, width, height);
-        play.setFocusable(true);
-        play.setVisible(true);
         play.addMouseListener(new MousePressListener());
-
-        panel.setLayout(null);
-
-        panel.add(play);
-        this.add(panel);
-
-        this.setVisible(true);
-
-        setResizable(false);
-        play.requestFocus();
     }
 }
