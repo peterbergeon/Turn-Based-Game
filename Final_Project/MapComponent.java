@@ -518,9 +518,14 @@ public class MapComponent extends JComponent
             //                 swarm.remove(i);
             //             }
             //             else{
-            if(swarm[i].getHome().getRow() - currentRow > 1 || swarm[i].getHome().getRow() - currentRow < -1 || 
-            swarm[i].getHome().getCol() - currentCol > 1 || swarm[i].getHome().getCol() - currentCol < -1){
-                move(swarm[i].getHome(), adjacent(you.getHome()), swarm[i].getMove());
+            if(!you.getHome().isRoom()){
+                if(swarm[i].getHome().getRow() - currentRow > 3 || swarm[i].getHome().getRow() - currentRow < -3 || 
+                swarm[i].getHome().getCol() - currentCol > 3 || swarm[i].getHome().getCol() - currentCol < -3){
+                    move(swarm[i].getHome(), adjacent(you.getHome()), swarm[i].getMove());
+                }
+                else{
+                    move(swarm[i].getHome(), adjacent(you.getHome()), swarm[i].getMove());
+                }
             }
             //            }
         }
