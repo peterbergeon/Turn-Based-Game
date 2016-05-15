@@ -168,7 +168,7 @@ public class MapComponent extends JComponent
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
                 if(r < 21 || r > (row - 21) || (c < 21) || (c > col - 21)){
-                    map[r][c] = new Tile(r,c, 100, 100);
+                    map[r][c] = new Tile(r,c, 100, 10000);
                 }
             }
         }
@@ -346,22 +346,31 @@ public class MapComponent extends JComponent
         if(kend > col) kend = col;
         for(int i = istart; i < iend; i++){
             for(int k = kstart; k < kend; k++){
-                map[i][k].setDistance(1000);
+                map[i][k].setDistance(10000);
             }
         }
         end.setDistance(0);
-        for(int d = 1; d <= 20; d++){
-            for(int r = end.getRow() - d; r <= end.getRow() + d; r++){
-                for(int c = end.getCol() - d; c <= end.getCol() + d; c++){
-                    if(r == end.getRow() + d || c == end.getCol() + d || r == end.getRow() - d || c == end.getCol() - d){
-                        getDistance(map[r][c]);
+        for(int w = 0; w < 50; w++){
+            for(int d = 1; d <= 20; d++){
+                for(int r = end.getRow() - d; r <= end.getRow() + d; r++){
+                    for(int c = end.getCol() - d; c <= end.getCol() + d; c++){
+                        if(r == end.getRow() + d || c == end.getCol() + d || r == end.getRow() - d || c == end.getCol() - d){
+                            getDistance(map[r][c]);
+                        }
+                    }
+                }
+                for(int r = end.getRow() + d; r >= end.getRow() - d; r--){
+                    for(int c = end.getCol() + d; c >= end.getCol() - d; c--){
+                        if(r == end.getRow() + d || c == end.getCol() + d || r == end.getRow() - d || c == end.getCol() - d){
+                            getDistance(map[r][c]);
+                        }
                     }
                 }
             }
         }
         Tile closest = map[0][0];
-        for(int i = end.getRow() - 10; i <= end.getRow() + 10; i++){
-            for(int k = end.getCol() - 10; k <= end.getCol() + 10; k++){
+        for(int i = end.getRow() - 20; i <= end.getRow() + 20; i++){
+            for(int k = end.getCol() - 20; k <= end.getCol() + 20; k++){
                 if(map[i][k].getDistance() <= closest.getDistance() && map[i][k].getMoveable()){
                     closest = map[i][k];
                 } 
@@ -387,7 +396,7 @@ public class MapComponent extends JComponent
             }
         }
         orgin.setDistance(0);
-        for(int w = 0; w < 10; w++){
+        for(int w = 0; w < 50; w++){
             for(int d = 1; d <= 20; d++){
                 for(int r = orgin.getRow() - d; r <= orgin.getRow() + d; r++){
                     for(int c = orgin.getCol() - d; c <= orgin.getCol() + d; c++){
@@ -435,7 +444,7 @@ public class MapComponent extends JComponent
         map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() > other.getDistance() && 
         map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() > other.getDistance() && 
         map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() > other.getDistance()){
-            other.setDistance(1000);
+            other.setDistance(10000);
         }
     }
 

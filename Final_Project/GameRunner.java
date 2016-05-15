@@ -48,19 +48,17 @@ public class GameRunner extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5));
-                play.createMap();
+        MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5));       
+        panel.add(play);
+        this.add(panel);
+        play.repaint();
+        play.createMap();
         play.createCharacter();
         play.setPreferredSize(new Dimension(width, height));
         play.setBounds(0, 0, width, height);
         play.setFocusable(true);
 
         panel.setLayout(null);
-
-        panel.add(play);
-        this.add(panel);
-
-        this.setVisible(true);
 
         setResizable(false);
         play.requestFocus();

@@ -93,6 +93,8 @@ public class Tile
             g2.drawString("Current Row : " + ("" + r), 0, 100);
             g2.drawString("Current Col : " + ("" + c), 0, 200);
         }
+        g2.setColor(Color.white);
+        g2.drawString("" + distance, x + 30, y + 30);
     }
 }
 
