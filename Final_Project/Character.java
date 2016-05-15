@@ -54,4 +54,6 @@ public class Character
     public void draw(Graphics2D g, int x, int y){
         g.drawImage(img,x,y,null);
     }
+    
+    
 }

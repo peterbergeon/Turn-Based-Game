@@ -34,7 +34,7 @@ public class MapComponent extends JComponent
     private BufferedImage wood;
     private BufferedImage door;
     private BufferedImage mud;
-    //private arrayList<Tile> allEnemies;
+    private ArrayList<Enemy> swarm;
     //     private BufferedImage sideWH;
     //     private BufferedImage sideWV;
     //     private BufferedImage sideWLtT;
@@ -315,9 +315,8 @@ public class MapComponent extends JComponent
             yTile = (int)((yShift) / 60);
         }
         if(you.getHome().getRow() + xTile > -1 && you.getHome().getRow() + xTile < row && you.getHome().getCol() + yTile > -1 && 
-        you.getHome().getCol() + yTile < col && map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getMoveable()){
-            you.getHome().removeCharacter();
-            map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].addCharacter(you);
+        you.getHome().getCol() + yTile < col){
+            move(you.getHome(), map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile], you.getMove());
         }
         fixDistance(you.getHome(), you.getMove());
     }
@@ -330,12 +329,27 @@ public class MapComponent extends JComponent
             end.addCharacter(toMove);
         }
         else{
-            closest(end).addCharacter(toMove);
+            Tile newEnd = closest(end);
+            newEnd.addCharacter(toMove);
         }
         fixDistance(you.getHome(), you.getMove());
     }
 
     public Tile closest(Tile end){
+        int istart = end.getRow() - 30;
+        if(istart < 0) istart = 0;
+        int iend = end.getRow() + 30;
+        if(iend > row) iend = row;
+        int kstart = end.getCol() - 30;
+        if(kstart < 0) kstart = 0;
+        int kend = end.getCol() + 30;
+        if(kend > col) kend = col;
+        for(int i = istart; i < iend; i++){
+            for(int k = kstart; k < kend; k++){
+                map[i][k].setDistance(1000);
+            }
+        }
+        end.setDistance(0);
         for(int d = 1; d <= 20; d++){
             for(int r = end.getRow() - d; r <= end.getRow() + d; r++){
                 for(int c = end.getCol() - d; c <= end.getCol() + d; c++){
@@ -348,11 +362,12 @@ public class MapComponent extends JComponent
         Tile closest = map[0][0];
         for(int i = end.getRow() - 10; i <= end.getRow() + 10; i++){
             for(int k = end.getCol() - 10; k <= end.getCol() + 10; k++){
-                if(map[i][k].getDistance() < closest.getDistance() && map[i][k].getMoveable()){
+                if(map[i][k].getDistance() <= closest.getDistance() && map[i][k].getMoveable()){
                     closest = map[i][k];
                 } 
             }
         }
+        fixDistance(you.getHome(), you.getMove());
         return closest;
     }
 
@@ -391,27 +406,45 @@ public class MapComponent extends JComponent
         if(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain());
         }
-        if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
+        else if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain());
+        }    
+        else if(map[other.getRow() - 1][other.getCol() - 1].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow() - 1][other.getCol()].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow() + 1][other.getCol() + 1].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow() - 1][other.getCol() + 1].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow()][other.getCol() + 1].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow()][other.getCol() - 1].getDistance() + other.getTerrain() > other.getDistance() && 
+        map[other.getRow() + 1][other.getCol() - 1].getDistance() + other.getTerrain() > other.getDistance()){
+            other.setDistance(1000);
         }
+    }
+
+    public void spawn(){
+
+    }
+
+    public void endTurn(){
+
     }
 }
 
