@@ -21,6 +21,7 @@ public class Tile
     private int color;
     private int terrain;
     private int distance;
+    private boolean room;
     private boolean moveable;
     public Tile(int row, int col, int color, int terrain){
         r = row;
@@ -28,7 +29,16 @@ public class Tile
         this.color = color;
         this.terrain = terrain * 2;
         moveable = false;
+        room = false;
         distance = 100;
+    }
+    
+    public void room(){
+        room = true;
+    }
+    
+    public boolean isRoom(){
+        return room;
     }
 
     public void addCharacter(Character h){

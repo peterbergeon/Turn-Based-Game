@@ -20,12 +20,15 @@ public class Room
                 for(int col = 0; col < l; col++){
                     if(row == 0 && col == l / 2){
                         map[row][col] = new Tile(row + r, col + c, 16, m / 2);//door
+                        map[row][col].room();
                     }
                     else if(row == 0 || col == 0 || row == w - 1 || col == l - 1){
                         map[row][col] = new Tile(row + r, col + c, 100, 10000);//wall
+                        map[row][col].room();
                     }
                     else{
                         map[row][col] = new Tile(row + r, col + c, 15,3);//floor
+                        map[row][col].room();
                     }
                 }
             }
