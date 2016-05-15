@@ -70,7 +70,7 @@ public class GameRunner extends JFrame
         play.createRoad();
         play.createCharacter();
         play.createWall();
-        play.fixDistance();
+        play.fixDistance(play.getCurrentTile() , play.getCurrentTile().getCharacter().getMove());
         play.repaint();
         class MousePressListener implements MouseListener
         {

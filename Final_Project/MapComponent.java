@@ -23,7 +23,6 @@ public class MapComponent extends JComponent
     private int currentRow;
     private int currentCol;
     private Tile[][] map;
-    private Tile currentTile;
     private Character you;
     private BufferedImage road;
     private BufferedImage roadV;
@@ -35,6 +34,7 @@ public class MapComponent extends JComponent
     private BufferedImage wood;
     private BufferedImage door;
     private BufferedImage mud;
+    //private arrayList<Tile> allEnemies;
     //     private BufferedImage sideWH;
     //     private BufferedImage sideWV;
     //     private BufferedImage sideWLtT;
@@ -167,7 +167,7 @@ public class MapComponent extends JComponent
     public void createWall(){
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
-                if(r < 20 || r > (row - 20) || (c < 20) || (c > col - 20)){
+                if(r < 21 || r > (row - 21) || (c < 21) || (c > col - 21)){
                     map[r][c] = new Tile(r,c, 100, 100);
                 }
             }
@@ -216,8 +216,7 @@ public class MapComponent extends JComponent
     }
 
     public void createCharacter(){
-        currentTile = map[row/2][col/2];
-        currentTile.addCharacter(you);
+        map[row/2][col/2].addCharacter(you);
     }
 
     public boolean empty(){
@@ -240,20 +239,20 @@ public class MapComponent extends JComponent
             graphics2.fillRect(501, 501, 498, 38);            
         }
         else{
-            int rstart = currentTile.getRow() - 20;
+            int rstart = you.getHome().getRow() - 20;
             if(rstart < 0) rstart = 0;
-            int rend = currentTile.getRow() + 20;
+            int rend = you.getHome().getRow() + 20;
             if(rend > row) rend = row;
-            int cstart = currentTile.getCol() - 20;
+            int cstart = you.getHome().getCol() - 20;
             if(cstart < 0) cstart = 0;
-            int cend = currentTile.getCol() + 20;
+            int cend = you.getHome().getCol() + 20;
             if(cend > col) cend = col;
             int x = 0;
             int y = 0;
             for(int r = rstart; r < rend; r++){
                 for(int c = cstart; c < cend; c++){
-                    x = currentTile.getRow() - map[r][c].getRow();
-                    y = currentTile.getCol() - map[r][c].getCol();
+                    x = you.getHome().getRow() - map[r][c].getRow();
+                    y = you.getHome().getCol() - map[r][c].getCol();
                     if(map[r][c].getColor() == 0){
                         map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                     }
@@ -292,6 +291,10 @@ public class MapComponent extends JComponent
         }
     }
 
+    public Tile getCurrentTile(){
+        return you.getHome();
+    }
+
     public void click(int mouseX, int mouseY){
         int xCenter = (width/2) - 30;
         int yCenter = (height/2) - 30;
@@ -311,25 +314,56 @@ public class MapComponent extends JComponent
         else if(yShift >= 0){
             yTile = (int)((yShift) / 60);
         }
-        if(currentTile.getRow() + xTile > -1 && currentTile.getRow() + xTile < row && currentTile.getCol() + yTile > -1 && 
-        currentTile.getCol() + yTile < col && map[currentTile.getRow() + xTile][currentTile.getCol() + yTile].getMoveable()){
-            Character hero = currentTile.getCharacter();
-            currentTile.removeCharacter();
-            currentTile = map[currentTile.getRow() + xTile][currentTile.getCol() + yTile];
-            currentTile.addCharacter(hero);
+        if(you.getHome().getRow() + xTile > -1 && you.getHome().getRow() + xTile < row && you.getHome().getCol() + yTile > -1 && 
+        you.getHome().getCol() + yTile < col && map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getMoveable()){
+            you.getHome().removeCharacter();
+            map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].addCharacter(you);
         }
-        fixDistance();
+        fixDistance(you.getHome(), you.getMove());
     }
 
-    public void fixDistance(){
-        int move = currentTile.getCharacter().getMove();
-        int istart = currentTile.getRow() - 30;
+    public void move(Tile start, Tile end, int move){
+        Character toMove = start.getCharacter();
+        start.removeCharacter();
+        fixDistance(start,move);
+        if(end.getMoveable()){
+            end.addCharacter(toMove);
+        }
+        else{
+            closest(end).addCharacter(toMove);
+        }
+        fixDistance(you.getHome(), you.getMove());
+    }
+
+    public Tile closest(Tile end){
+        for(int d = 1; d <= 20; d++){
+            for(int r = end.getRow() - d; r <= end.getRow() + d; r++){
+                for(int c = end.getCol() - d; c <= end.getCol() + d; c++){
+                    if(r == end.getRow() + d || c == end.getCol() + d || r == end.getRow() - d || c == end.getCol() - d){
+                        getDistance(map[r][c]);
+                    }
+                }
+            }
+        }
+        Tile closest = map[0][0];
+        for(int i = end.getRow() - 10; i <= end.getRow() + 10; i++){
+            for(int k = end.getCol() - 10; k <= end.getCol() + 10; k++){
+                if(map[i][k].getDistance() < closest.getDistance() && map[i][k].getMoveable()){
+                    closest = map[i][k];
+                } 
+            }
+        }
+        return closest;
+    }
+
+    public void fixDistance(Tile orgin, int move){
+        int istart = orgin.getRow() - 30;
         if(istart < 0) istart = 0;
-        int iend = currentTile.getRow() + 30;
+        int iend = orgin.getRow() + 30;
         if(iend > row) iend = row;
-        int kstart = currentTile.getCol() - 30;
+        int kstart = orgin.getCol() - 30;
         if(kstart < 0) kstart = 0;
-        int kend = currentTile.getCol() + 30;
+        int kend = orgin.getCol() + 30;
         if(kend > col) kend = col;
 
         for(int i = istart; i < iend; i++){
@@ -337,12 +371,12 @@ public class MapComponent extends JComponent
                 map[i][k].setDistance(1000);
             }
         }
-        currentTile.setDistance(0);
+        orgin.setDistance(0);
         for(int w = 0; w < 10; w++){
-            for(int d = 1; d <= move / 2; d++){
-                for(int r = currentTile.getRow() - d; r <= currentTile.getRow() + d; r++){
-                    for(int c = currentTile.getCol() - d; c <= currentTile.getCol() + d; c++){
-                        if(r == currentTile.getRow() + d || c == currentTile.getCol() + d || r == currentTile.getRow() - d || c == currentTile.getCol() - d){
+            for(int d = 1; d <= 20; d++){
+                for(int r = orgin.getRow() - d; r <= orgin.getRow() + d; r++){
+                    for(int c = orgin.getCol() - d; c <= orgin.getCol() + d; c++){
+                        if(r == orgin.getRow() + d || c == orgin.getCol() + d || r == orgin.getRow() - d || c == orgin.getCol() - d){
                             getDistance(map[r][c]);
                         }
                         if(map[r][c].getDistance() <= move) map[r][c].isMoveable(true);
@@ -351,7 +385,6 @@ public class MapComponent extends JComponent
                 }
             }
         }
-        currentTile.isMoveable(false);
     }
 
     public void getDistance(Tile other){

@@ -34,6 +34,7 @@ public class Tile
     public void addCharacter(Character h){
         thing = h;
         terrain += 1000;
+        h.setHome(this);
     }
 
     public void removeCharacter(){
