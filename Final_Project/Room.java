@@ -87,9 +87,18 @@ public class Room
                 }
             }
         }  
+
+        for(int ra = 1; ra < w - 1; ra++){
+            for(int ca = 1; ca < l - 1; ca++){
+                if(map[ra + 1][ca].getColor() == 100 && map[ra + 1][ca + 1].getColor() == 100 && map[ra + 1][ca - 1].getColor() == 100){
+                    map[ra][ca] = new Tile(ra + r, ca + c, 15,3);//floor
+                    map[ra][ca].room(); 
+                }
+            }
+        }
     }
 
-        public Room(int m){
+    public Room(int m){
         this(1,1,1,1,m);
     }
 
