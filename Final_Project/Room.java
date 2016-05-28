@@ -11,9 +11,13 @@ public class Room
     private String str;
     private int mv;
     private ArrayList<Point> points;
+    private int r;
+    private int c;
 
     public Room(int r, int c, int w, int l, int m){
         map = new Tile[w][l];
+        this.r = r;
+        this.c = c;
         mv = m;
         for(int row = 0; row < w; row++){
             for(int col = 0; col < l; col++){
@@ -35,6 +39,8 @@ public class Room
 
     public Room(int r, int c, int w, int l, int m, int checker){
         map = new Tile[w][l];
+        this.r = r;
+        this.c = c;
         mv = m;
         points = new ArrayList<Point>();
         for(int i = 0; i < w * l; i += 100)
@@ -158,7 +164,6 @@ public class Room
 
                 if(i > 3){
                     map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
-                    map[z][x].room();
                 }
             }
         }
@@ -172,6 +177,17 @@ public class Room
         for(int z = 1; z < w - 1; z++){
             for(int x = 1; x < l - 1; x++){
                 if(map[z + 1][x].getColor() == 100 && (map[z][x + 1].getColor() == 100 || map[z][x - 1].getColor() == 100)){
+                    map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
+                    map[z][x].room();
+                }
+            }
+        }
+        
+        double ranWall = 0;
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                ranWall = Math.random() * 10;
+                if(ranWall < 1){
                     map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
                     map[z][x].room();
                 }
@@ -195,12 +211,57 @@ public class Room
                 }
             }
         }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z + 1][x - 1].getColor() == 100 
+                && map[z][x - 1].getColor() == 100
+                && map[z - 1][x - 1].getColor() == 100 
+                && map[z + 1][x].getColor() == 100 
+                && map[z - 1][x].getColor() == 100 ){
+                    map[z][x] = new Tile(z + r, x + c, 15,3);//floor
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z + 1][x - 1].getColor() == 100 
+                && map[z][x - 1].getColor() == 100
+                && map[z - 1][x - 1].getColor() == 100 
+                && map[z + 1][x].getColor() == 100 
+                && map[z - 1][x].getColor() == 100 ){
+                    map[z][x] = new Tile(z + r, x + c, 15,3);//floor
+                    map[z][x].room();
+                }
+            }
+        }
+
         double ran = 0;
         for(int z = 1; z < w - 1; z++){
             for(int x = 1; x < l - 1; x++){
-                ran = Math.random() * 100;
-                if(ran < 20 && map[z][x].getColor() == 100){
-                    map[z][x] = new Tile(z + r, x + c, 16, m / 2);//door
+                ran = Math.random() * 10;
+                if(ran < 2 && map[z][x].getColor() == 100){
+                    map[z][x] = new Tile(z + r, x + c, 15, 3);//door
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z+1][x].getColor()==100 && map[z][x-1].getColor()==100 && map[z+1][x-1].getColor()==15 && map[z][x].getColor()==15){
+                    map[z][x] = new Tile(z + r, x + c, 16, m/2);//door
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z-1][x].getColor()==100 && map[z][x-1].getColor()==100 && map[z-1][x-1].getColor()==15 && map[z][x].getColor()==15){
+                    map[z][x] = new Tile(z + r, x + c, 16, m/2);//door
                     map[z][x].room();
                 }
             }
