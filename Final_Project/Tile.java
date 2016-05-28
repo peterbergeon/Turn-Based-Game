@@ -43,13 +43,13 @@ public class Tile
 
     public void addCharacter(Character h){
         thing = h;
-        terrain += 1000;
+        terrain += 10000;
         h.setHome(this);
     }
 
     public void removeCharacter(){
         thing = null;
-        terrain -= 1000;
+        terrain -= 10000;
     }
 
     public Character getCharacter(){

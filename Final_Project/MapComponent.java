@@ -83,22 +83,22 @@ public class MapComponent extends JComponent
         }
 
         try {
-            grass1 = ImageIO.read(new File("Grass1.png"));
+            grass1 = ImageIO.read(new File("Grass.png"));
         } catch (IOException e) {
         }
 
         try {
-            grass2 = ImageIO.read(new File("Grass2.png"));
+            grass2 = ImageIO.read(new File("Grass.png"));
         } catch (IOException e) {
         }
 
         try {
-            grass3 = ImageIO.read(new File("Grass3.png"));
+            grass3 = ImageIO.read(new File("Grass.png"));
         } catch (IOException e) {
         }
 
         try {
-            wood = ImageIO.read(new File("Wood.png"));
+            wood = ImageIO.read(new File("Floor.png"));
         } catch (IOException e) {
         }
 
@@ -328,11 +328,19 @@ public class MapComponent extends JComponent
         }
         if(you.getHome().getRow() + xTile > -1 && you.getHome().getRow() + xTile < row && you.getHome().getCol() + yTile > -1 && 
         you.getHome().getCol() + yTile < col && map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getMoveable()){
-            move(you.getHome(), map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile], you.getMove());
+            fixDistance(you.getHome(), you.getMove());
+            you.getHome().removeCharacter();
+            map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].addCharacter(you);
             endTurn();
         }
         fixDistance(you.getHome(), you.getMove());
     }
+
+    //     public void dMove(Enemy e){
+    //         int r = e.getHome().getRow();
+    //         int c = e.getHome().getCol();
+    //         if(e.getHome().getRow() < currentRow) r++;
+    //         if(
 
     public void move(Tile start, Tile end, int move){
         Character toMove = start.getCharacter();
@@ -365,8 +373,8 @@ public class MapComponent extends JComponent
             }
         }
         end.setDistance(0);
-        for(int w = 0; w < 50; w++){
-            for(int d = 1; d <= 30; d++){
+        for(int w = 0; w < 25; w++){
+            for(int d = 1; d <= 50; d++){
                 for(int r = end.getRow() - d; r <= end.getRow() + d; r++){
                     for(int c = end.getCol() - d; c <= end.getCol() + d; c++){
                         if(r == end.getRow() + d || c == end.getCol() + d || r == end.getRow() - d || c == end.getCol() - d){
@@ -377,8 +385,8 @@ public class MapComponent extends JComponent
             }
         }
         Tile closest = map[0][0];
-        for(int i = end.getRow() - 30; i <= end.getRow() + 30; i++){
-            for(int k = end.getCol() - 30; k <= end.getCol() + 30; k++){
+        for(int i = end.getRow() - 50; i <= end.getRow() + 50; i++){
+            for(int k = end.getCol() - 50; k <= end.getCol() + 50; k++){
                 if(map[i][k].getDistance() <= closest.getDistance() && map[i][k].getMoveable()){
                     closest = map[i][k];
                 } 
@@ -389,23 +397,23 @@ public class MapComponent extends JComponent
     }
 
     public void fixDistance(Tile orgin, int move){
-        int istart = orgin.getRow() - 30;
+        int istart = orgin.getRow() - 52;
         if(istart < 0) istart = 0;
-        int iend = orgin.getRow() + 30;
+        int iend = orgin.getRow() + 52;
         if(iend > row) iend = row;
-        int kstart = orgin.getCol() - 30;
+        int kstart = orgin.getCol() - 52;
         if(kstart < 0) kstart = 0;
-        int kend = orgin.getCol() + 30;
+        int kend = orgin.getCol() + 52;
         if(kend > col) kend = col;
 
         for(int i = istart; i < iend; i++){
             for(int k = kstart; k < kend; k++){
-                map[i][k].setDistance(1000);
+                map[i][k].setDistance(10000);
             }
         }
         orgin.setDistance(0);
-        for(int w = 0; w < 50; w++){
-            for(int d = 1; d <= 30; d++){
+        for(int w = 0; w < 25; w++){
+            for(int d = 1; d <= 50; d++){
                 for(int r = orgin.getRow() - d; r <= orgin.getRow() + d; r++){
                     for(int c = orgin.getCol() - d; c <= orgin.getCol() + d; c++){
                         if(r == orgin.getRow() + d || c == orgin.getCol() + d || r == orgin.getRow() - d || c == orgin.getCol() - d){
