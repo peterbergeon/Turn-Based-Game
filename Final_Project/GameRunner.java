@@ -64,8 +64,8 @@ public class GameRunner extends JFrame
         play.requestFocus();
         this.setVisible(true);
         play.repaint();
-        play.createRoom();
         play.createRoad();
+        play.createRoom();
         play.createCharacter();
         play.createWall();
         play.fixDistance(play.getCurrentTile() , play.getCurrentTile().getCharacter().getMove());

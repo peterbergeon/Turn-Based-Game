@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.params=x\ y\ model
+comment0.target=Point(double,\ double,\ Tile)
+comment1.params=
+comment1.target=double\ getX()
+comment2.params=
+comment2.target=double\ getY()
+numComments=3

@@ -33,6 +33,10 @@ public class Tile
         distance = 100;
     }
     
+    public Tile(){
+        this(0,0,0,0);
+    }
+    
     public void room(){
         room = true;
     }
@@ -43,13 +47,13 @@ public class Tile
 
     public void addCharacter(Character h){
         thing = h;
-        terrain += 10000;
+        terrain += 1000;
         h.setHome(this);
     }
 
     public void removeCharacter(){
         thing = null;
-        terrain -= 10000;
+        terrain -= 1000;
     }
 
     public Character getCharacter(){
