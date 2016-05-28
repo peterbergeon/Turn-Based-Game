@@ -96,6 +96,115 @@ public class Room
                 }
             }
         }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z][x].getColor() != 100){                               
+                    if(map[z + 1][x].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z - 1][x].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z + 1][x + 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z][x + 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z - 1][x + 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z + 1][x - 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z][x - 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }
+                    else if(map[z - 1][x - 1].getColor()  == 100){
+                        map[z][x].isNotRoom();
+                    }  
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                int i = 0;
+                if(!map[z + 1][x].isRoom()){
+                    i++;
+                }
+                else if(!map[z - 1][x].isRoom()){
+                    i++;
+                }
+                else if(!map[z + 1][x + 1].isRoom()){
+                    i++;
+                }
+                else if(!map[z][x + 1].isRoom()){
+                    i++;
+                }
+                else if(!map[z - 1][x + 1].isRoom()){
+                    i++;
+                }
+                else if(!map[z + 1][x - 1].isRoom()){
+                    i++;
+                }
+                else if(!map[z][x - 1].isRoom()){
+                    i++;
+                }
+                else if(!map[z - 1][x - 1].isRoom()){
+                    i++;
+                }  
+
+                if(i > 3){
+                    map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                map[z][x].room();
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z + 1][x].getColor() == 100 && (map[z][x + 1].getColor() == 100 || map[z][x - 1].getColor() == 100)){
+                    map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z][x].getColor() == 100 && map[z + 1][x].getColor() != 100 && map[z - 1][x].getColor() != 100 && map[z][x - 1].getColor() != 100){
+                    map[z][x] = new Tile(z + r, x + c, 15,3);//floor
+                    map[z][x].room();
+                }
+            }
+        }
+
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                if(map[z][x + 1].getColor() == 100 && map[z][x - 1].getColor() == 100){
+                    map[z][x] = new Tile(z + r, x + c, 100, 10000);//wall
+                    map[z][x].room();
+                }
+            }
+        }
+        double ran = 0;
+        for(int z = 1; z < w - 1; z++){
+            for(int x = 1; x < l - 1; x++){
+                ran = Math.random() * 100;
+                if(ran < 20 && map[z][x].getColor() == 100){
+                    map[z][x] = new Tile(z + r, x + c, 16, m / 2);//door
+                    map[z][x].room();
+                }
+            }
+        }
     }
 
     public Room(int m){
@@ -123,4 +232,31 @@ public class Room
     public Tile getTile(int r, int c){
         return map[r][c];
     }
+
+    //         public void addDoors(Room needsFix){
+    //         int i = 0;
+    //         while(needsFix.getTile(i, 1).getColor() == 100){
+    //             i++;
+    //         }
+    //         Tile orgin = needsFix.getTile(i,1);
+    //         fixDistance(orgin,5);
+    //         
+    //         int ran1 = 0; 
+    //         int ran2 = 0; Math.random() * needsFix.getMap()[0].length;
+    //         while(badRoom(needsFix)){
+    //             ran1 = (int)(Math.random() * needsFix.getMap().length);
+    //             ran2 = (int)(
+    //         }
+    //     }
+    //     
+    //     public boolean badRoom(Room fix){
+    //         for(int i = 0; i < fix.getMap().length; i++){
+    //             for(int k = 0; k < fix.getMap()[0].length; k++){
+    //                 if(fix.getTile(i,k).getColor() != 100 && fix.getTile(i,k).getDistance() > 9999){
+    //                     return false;
+    //                 }
+    //             }
+    //         }
+    //         return true;
+    //     }
 }

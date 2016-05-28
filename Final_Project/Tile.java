@@ -44,6 +44,10 @@ public class Tile
     public boolean isRoom(){
         return room;
     }
+    
+    public void isNotRoom(){
+        room = false;
+    }
 
     public void addCharacter(Character h){
         thing = h;
