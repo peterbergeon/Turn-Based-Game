@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
-import java.awt.Color;
 import javax.swing.JComponent;
 /**
  * Write a description of class MapComponent here.
@@ -23,6 +22,7 @@ public class MapComponent extends JComponent
     private int currentRow;
     private int currentCol;
     private Tile[][] map;
+    private int paint;
     private Character you;
     private int turn;
     private BufferedImage road;
@@ -57,6 +57,7 @@ public class MapComponent extends JComponent
         this.you = you;
         row = rows;
         col = cols;
+        paint = 0;
         try {
             wall = ImageIO.read(new File("Wall.png"));
         } catch (IOException e) {
@@ -209,11 +210,12 @@ public class MapComponent extends JComponent
 
     public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
-        if(map[100][100] == null){
+        if(paint < 2){
             graphics2.setColor(Color.green);
             graphics2.drawRect(500, 500, 500, 40);
             graphics2.setColor(Color.red);
-            graphics2.fillRect(501, 501, 498, 38);            
+            graphics2.fillRect(501, 501, 498, 38); 
+            paint ++;
         }
         else{
             int rstart = you.getHome().getRow() - 20;

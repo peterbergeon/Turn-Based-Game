@@ -11,13 +11,10 @@ import java.awt.Toolkit;
 import java.awt.Cursor;
 import java.awt.MouseInfo;
 import javax.swing.JPanel;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.net.URL;
 import java.io.File;
 import java.io.IOException;
 /**
@@ -48,12 +45,11 @@ public class GameRunner extends JFrame
 
         JPanel panel = new JPanel(true);
 
-        MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5));       
+        MapComponent play = new MapComponent(width, height, 600, 600, new Character("JOAT",5000));       
         panel.add(play);
         this.add(panel);
         play.repaint();
         play.createMap();
-        play.createCharacter();
         play.setPreferredSize(new Dimension(width, height));
         play.setBounds(0, 0, width, height);
         play.setFocusable(true);
@@ -63,11 +59,10 @@ public class GameRunner extends JFrame
         setResizable(false);
         play.requestFocus();
         this.setVisible(true);
-        play.repaint();
         play.createRoad();
         play.createRoom();
-        play.createCharacter();
         play.createWall();
+        play.createCharacter();
         play.fixDistance(play.getCurrentTile() , play.getCurrentTile().getCharacter().getMove());
         play.repaint();
         class MousePressListener implements MouseListener
