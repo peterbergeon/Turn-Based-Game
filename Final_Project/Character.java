@@ -14,6 +14,7 @@ import java.awt.Graphics2D;
 public class Character
 {
     private int hp;
+    private int maxhp;
     private int dmg;
     private int mv;
     BufferedImage img;
@@ -30,7 +31,8 @@ public class Character
     }
 
     public Character(String str, int move, int health, int damage){
-        hp = health;
+        maxhp = health;
+        hp = maxhp;
         dmg = damage;
         mv = move * 6;
         try {
@@ -49,6 +51,18 @@ public class Character
 
     public int getMove(){
         return mv;
+    }
+    
+    public void attack(Character c){
+        c.damage(dmg);
+    }
+    
+    public void damage(int x){
+        hp -= x;
+    }
+    
+    public int getHp(){
+        return hp;
     }
 
     public void draw(Graphics2D g, int x, int y){

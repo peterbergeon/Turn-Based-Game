@@ -128,7 +128,7 @@ public class Room
             int x = 0;
             int y = 0;
             //up
-            if(which != 0){
+            if(which == 0){
                 int h = 0;
                 x = (int)points.get(i).getX();
                 y = (int)points.get(i).getY();
@@ -147,7 +147,7 @@ public class Room
                 }
             }
             //down
-            if(which != 1){
+            if(which == 1){
                 int h = 0;
                 x = (int)points.get(i).getX();
                 y = (int)points.get(i).getY();
@@ -166,7 +166,7 @@ public class Room
                 }
             }
             //left
-            if(which != 2){
+            if(which == 2){
                 int h = 0;
                 x = (int)points.get(i).getX();
                 y = (int)points.get(i).getY();
@@ -185,7 +185,7 @@ public class Room
                 }
             }
 
-            if(which != 3){
+            if(which == 3){
                 int h = 0;
                 x = (int)points.get(i).getX();
                 y = (int)points.get(i).getY();
@@ -204,6 +204,8 @@ public class Room
                 }
             }
         }
+       
+
         //fill hole
         // 
         //         for(int ra = 1; ra < w - 1; ra++){

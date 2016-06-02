@@ -24,6 +24,7 @@ public class Tile
     private boolean room;
     private boolean moveable;
     public Tile(int row, int col, int color, int terrain){
+        double ran = (Math.random() * 100);
         r = row;
         c = col;
         this.color = color;
@@ -45,10 +46,11 @@ public class Tile
         return room;
     }
 
-    public void addCharacter(Character h){
+    public Character addCharacter(Character h){
         thing = h;
         terrain += 1000;
         h.setHome(this);
+        return h;
     }
 
     public void removeCharacter(){

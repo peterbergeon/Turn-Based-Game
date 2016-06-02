@@ -21,6 +21,11 @@ public class MapComponent extends JComponent
     private int height;
     private int currentRow;
     private int currentCol;
+    private int move;
+    private int attacks;
+    private int aCount;
+    private int items;
+    private int iCount;
     private Tile[][] map;
     private int paint;
     private Character you;
@@ -35,7 +40,7 @@ public class MapComponent extends JComponent
     private BufferedImage wood;
     private BufferedImage door;
     private BufferedImage mud;
-    private Enemy[] swarm;
+    private ArrayList<Character> swarm;
     //     private BufferedImage sideWH;
     //     private BufferedImage sideWV;
     //     private BufferedImage sideWLtT;
@@ -49,7 +54,12 @@ public class MapComponent extends JComponent
 
     public MapComponent(int w, int h, int rows, int cols, Character you){
         map = new Tile[rows][cols];
-        swarm = new Enemy[50];
+        move = you.getMove();
+        attacks = 1;
+        aCount = 1;
+        items = 1;
+        iCount = 1;
+        swarm = new ArrayList<Character>();
         width = w;
         height = h;
         currentRow = w/2;
@@ -127,6 +137,10 @@ public class MapComponent extends JComponent
                 else{
                     map[r][c] = new Tile(r,c, 17, 7);
                 }
+                double ran = Math.random() * 100;
+                //                 if(r != row / 2 && c != col / 2 && ran < 1){
+                //                     map[r][c].addCharacter(new Enemy());
+                //                 }
             }
         }
     }
@@ -142,28 +156,28 @@ public class MapComponent extends JComponent
         }
     }
 
+    public void createEnemys(){
+        for(int i = 0; i < row; i++){
+            for(int k = 0; k < col; k++){
+                if(Math.random() < 0.01 && map[i][k].getColor() != 100 && i != currentRow && k != currentCol){
+                    swarm.add(map[i][k].addCharacter(new Enemy()));
+                }
+            }
+        }
+        swarm.add(map[303][303].addCharacter(new Enemy()));
+    }
+
     public void createRoom(){
         int randomL = 0;
         int randomW = 0;
-        Room room = new Room(you.getMove());
-        Room better = new Room(you.getMove(),0);
+        Room room = new Room(you.getMove() / 2);
+        Room better = new Room(you.getMove() / 2,0);
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
-                if(r % 100 == 40 && c % 100 == 40){
-                    randomL = (int)(Math.random() * 10 + 11);
-                    randomW = (int)(Math.random() * 10 + 11);
-                    room.changeRoom(r,c,randomW,randomL);
-                    for(int i = 0; i < randomW; i++){
-                        for(int k = 0; k < randomL; k++){
-                            map[r + i][c + k] = room.getTile(i,k);
-                        }
-                    }
-                }
-
-                if(r == 200 && c == 200){
-                    better.changeRoom(200,200,40,40,0);
-                    for(int i = 0; i < 40; i++){
-                        for(int k = 0; k < 40; k++){
+                if(r % 50 == 10 && c % 50 == 10 && r < 500 && c < 500 && r > 100 && c > 100){
+                    better.changeRoom(r,c,35,35,0);
+                    for(int i = 0; i < 35; i++){
+                        for(int k = 0; k < 35; k++){
                             map[r + i][c + k] = better.getTile(i,k);
                         }
                     }
@@ -175,14 +189,14 @@ public class MapComponent extends JComponent
     public void createRoad(){
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
-                if(r % 100 < 5 || c % 100 < 5){
-                    if(r % 100 == 2){
+                if(r % 50 < 5 || c % 50 < 5){
+                    if(r % 50 == 2){
                         map[r][c] = new Tile(r, c, 1, 3);
                     }
-                    else if(c % 100 == 2){
+                    else if(c % 50 == 2){
                         map[r][c] = new Tile(r, c, 2, 3);
                     }
-                    else if(((r % 100 == 0 || r % 100 == 4) && (c % 100 > 3 || c % 100 == 0)) || ((c % 100 == 0 || c % 100 == 4) && (r % 100 > 3 || r % 100 == 0))){
+                    else if(((r % 50 == 0 || r % 50 == 4) && (c % 50 > 3 || c % 50 == 0)) || ((c % 50 == 0 || c % 50 == 4) && (r % 50 > 3 || r % 50 == 0))){
                         map[r][c] = new Tile(r, c, 3, 3);
                     }
                     else {
@@ -210,64 +224,59 @@ public class MapComponent extends JComponent
 
     public void paintComponent(Graphics g) {
         Graphics2D graphics2 = (Graphics2D)g;
-        if(paint < 2){
-            graphics2.setColor(Color.green);
-            graphics2.drawRect(500, 500, 500, 40);
-            graphics2.setColor(Color.red);
-            graphics2.fillRect(501, 501, 498, 38); 
-            paint ++;
-        }
-        else{
-            int rstart = you.getHome().getRow() - 20;
-            if(rstart < 0) rstart = 0;
-            int rend = you.getHome().getRow() + 20;
-            if(rend > row) rend = row;
-            int cstart = you.getHome().getCol() - 20;
-            if(cstart < 0) cstart = 0;
-            int cend = you.getHome().getCol() + 20;
-            if(cend > col) cend = col;
-            int x = 0;
-            int y = 0;
-            for(int r = rstart; r < rend; r++){
-                for(int c = cstart; c < cend; c++){
-                    x = you.getHome().getRow() - map[r][c].getRow();
-                    y = you.getHome().getCol() - map[r][c].getCol();
-                    if(map[r][c].getColor() == 0){
-                        map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 1){
-                        map[r][c].draw(graphics2,roadV,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 2){
-                        map[r][c].draw(graphics2,roadH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 3){
-                        map[r][c].draw(graphics2,sideW,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }              
-                    else if(map[r][c].getColor() == 10){
-                        map[r][c].draw(graphics2,grass1,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 11){
-                        map[r][c].draw(graphics2,grass2,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 12){
-                        map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 15){
-                        map[r][c].draw(graphics2,wood,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 16){
-                        map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else if(map[r][c].getColor() == 17){
-                        map[r][c].draw(graphics2,mud,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
-                    else{
-                        map[r][c].draw(graphics2,wall,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
-                    }
+        int rstart = you.getHome().getRow() - 20;
+        if(rstart < 0) rstart = 0;
+        int rend = you.getHome().getRow() + 20;
+        if(rend > row) rend = row;
+        int cstart = you.getHome().getCol() - 20;
+        if(cstart < 0) cstart = 0;
+        int cend = you.getHome().getCol() + 20;
+        if(cend > col) cend = col;
+        int x = 0;
+        int y = 0;
+        for(int r = rstart; r < rend; r++){
+            for(int c = cstart; c < cend; c++){
+                x = you.getHome().getRow() - map[r][c].getRow();
+                y = you.getHome().getCol() - map[r][c].getCol();
+                if(map[r][c].getColor() == 0){
+                    map[r][c].draw(graphics2,road,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 1){
+                    map[r][c].draw(graphics2,roadV,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 2){
+                    map[r][c].draw(graphics2,roadH,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 3){
+                    map[r][c].draw(graphics2,sideW,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }              
+                else if(map[r][c].getColor() == 10){
+                    map[r][c].draw(graphics2,grass1,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 11){
+                    map[r][c].draw(graphics2,grass2,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 12){
+                    map[r][c].draw(graphics2,grass3,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 15){
+                    map[r][c].draw(graphics2,wood,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 16){
+                    map[r][c].draw(graphics2,door,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else if(map[r][c].getColor() == 17){
+                    map[r][c].draw(graphics2,mud,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
+                }
+                else{
+                    map[r][c].draw(graphics2,wall,(width/2) - 30 - (60 * x), (height/2) - 30 - (60 * y));
                 }
             }
         }
+        graphics2.setColor(Color.gray);
+        graphics2.fillRect(width - 200, height - 100, 200, 100);
+        graphics2.setColor(Color.white);
+        graphics2.drawString("End Turn", width - 175,height - 70);  
     }
 
     public Tile getCurrentTile(){
@@ -293,12 +302,16 @@ public class MapComponent extends JComponent
         else if(yShift >= 0){
             yTile = (int)((yShift) / 60);
         }
-        if(you.getHome().getRow() + xTile > -1 && you.getHome().getRow() + xTile < row && you.getHome().getCol() + yTile > -1 && 
-        you.getHome().getCol() + yTile < col && map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getMoveable()){
+        if(mouseX > width - 200 && mouseY > height - 100){
+            endTurn();
+        }
+        else if(you.getHome().getRow() + xTile > -1 && you.getHome().getRow() + xTile < row && you.getHome().getCol() + yTile > -1 && 
+        you.getHome().getCol() + yTile < col && map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getMoveable() && move > 0){
+            move -= map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getDistance();
             move(you, map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile]);
             //endTurn();
         }
-        fixDistance(you.getHome(), you.getMove());
+        fixDistance(you.getHome(), move);
     }
 
     //     public void dMove(Enemy e){
@@ -343,6 +356,103 @@ public class MapComponent extends JComponent
         }
     }
 
+    public void move(Character e){
+        int m = e.getMove();
+        you.getHome().setDistance(1000);
+        Tile orgin = e.getHome();
+        int original = e.getHome().getDistance() - 1000;
+        Tile toMove = orgin;
+        toMove.setDistance(10000000);
+        //         while(x > original - m){
+        //             toMove = getLowest(toMove);
+        //             x = toMove.getDistance();
+        //         }
+        int x = 3;
+        double ran = Math.random();
+        while(x > 0){
+            for(int r = toMove.getRow() - 1; r <= toMove.getRow() + 1; r++){
+                for(int c = toMove.getCol() - 1; c <= toMove.getCol() + 1; c++){
+                    if(map[r][c].getDistance() < toMove.getDistance() && map[r][c].getDistance() + m > original && map[r][c].getCharacter() == null){
+                        toMove = map[r][c];
+                    }
+                    else if(map[r][c].getDistance() == toMove.getDistance() && map[r][c].getDistance() + m > original && ran < 0.6 && map[r][c].getCharacter() == null){
+                        toMove = map[r][c];
+                        ran = Math.random();
+                    }
+                }
+            }   
+            x--;
+        }
+        move(e,toMove);
+    }
+
+    public void moveS(Character e){
+        int x = Math.abs(e.getHome().getRow() - currentRow);
+        int y = Math.abs(e.getHome().getCol() - currentCol);
+
+        int mx = (int)(e.getMove() / 6 * Math.random() + 1);
+        int my = (int)(e.getMove() / 6 * Math.random() + 1);
+
+        if(mx > x) mx = x;
+        if(my > y) my = y;
+
+        if(e.getHome().getRow() - currentRow > 0) mx *= -1;
+        if(e.getHome().getCol() - currentCol > 0) my *= -1;
+
+        mx += currentRow;
+        my += currentCol;
+        while(map[mx][my].getCharacter() == null){
+            double ran = Math.random() * 4;
+            if(ran < 1) mx++;
+            else if(ran < 2) mx--;
+            else if(ran < 3) my++;
+            else my--;
+        }
+
+        move(e,map[mx][my]);
+    }
+
+    public Tile getLowest(Tile orgin){
+        Tile other = orgin;
+        int distance = orgin.getDistance();
+        if(orgin.getCharacter() != null){
+            distance -= 1000;
+        }
+        if(map[other.getRow() + 1][other.getCol()].getDistance() <= distance){
+            distance = map[other.getRow() + 1][other.getCol()].getDistance();
+            orgin = map[other.getRow() + 1][other.getCol()];
+        }
+        else if(map[other.getRow() + 1][other.getCol() + 1].getDistance() <= distance){
+            distance = map[other.getRow() + 1][other.getCol() + 1].getDistance();
+            orgin = map[other.getRow() + 1][other.getCol() + 1];
+        }
+        else if(map[other.getRow() + 1][other.getCol() - 1].getDistance() <= distance){
+            distance = map[other.getRow() + 1][other.getCol() - 1].getDistance();
+            orgin = map[other.getRow() + 1][other.getCol() - 1];
+        }
+        else if(map[other.getRow()][other.getCol() + 1].getDistance() <= distance){
+            distance = map[other.getRow()][other.getCol() + 1].getDistance();
+            orgin = map[other.getRow()][other.getCol() + 1];
+        }
+        else if(map[other.getRow()][other.getCol() - 1].getDistance() <= distance){
+            distance = map[other.getRow()][other.getCol() - 1].getDistance();
+            orgin = map[other.getRow()][other.getCol() - 1];
+        }
+        else if(map[other.getRow() - 1][other.getCol()].getDistance() <= distance){
+            distance = map[other.getRow() - 1][other.getCol()].getDistance();
+            orgin = map[other.getRow() - 1][other.getCol()];
+        }
+        else if(map[other.getRow() - 1][other.getCol() + 1].getDistance() <= distance){
+            distance = map[other.getRow() - 1][other.getCol() + 1].getDistance();
+            orgin = map[other.getRow() - 1][other.getCol() + 1];
+        }
+        else if(map[other.getRow() - 1][other.getCol() - 1].getDistance() <= distance){
+            distance = map[other.getRow() - 1][other.getCol() - 1].getDistance();
+            orgin = map[other.getRow() - 1][other.getCol() - 1];
+        }
+        return orgin;
+    }
+
     public void getDistance(Tile other){
         if(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain() < other.getDistance()){
             other.setDistance(map[other.getRow() + 1][other.getCol()].getDistance() + other.getTerrain());
@@ -380,27 +490,17 @@ public class MapComponent extends JComponent
         }
     }
 
-    public void spawn(int t){
-        int d = t / 5;
-        int howMany = d - swarm.length;
-        int chance = 0;
-        int h = 0;
-        int a = 0;
+    public void spawn(){
+        int d = turn;
+        int howMany = (int)(Math.random() * (turn + 199)) / 100;
         for(int s = 0; s < howMany; s++){
-            for(int r = currentRow - 20; r < currentRow + 20; r++){
-                for(int c = currentCol - 20; r < currentCol + 20; c++){
-                    if((r > currentRow - 10 && r < currentRow + 10) || (c > currentCol - 10 && r < currentCol + 10)){}
-                    else if(map[r][c].isRoom()){chance++;}
-                    else {
-                        if((int)(Math.random() * 300) + chance > 300){
-                            h = (int)((Math.random() * d / 2) + d * 2) + 50;
-                            a = (int)((Math.random() * d / 4) + d / 2) + 10; 
-                            Enemy toAdd = new Enemy("Rat",2,h,s);
-                            map[r][c].addCharacter(toAdd);
-                            swarm[5] = toAdd;
-                            chance++;
-                        }
-                    }
+            for(int r = currentRow - 50; r < currentRow + 50; r++){
+                for(int c = currentCol - 50; r < currentCol + 50; c++){
+                    //                             Enemy toAdd = new Enemy();
+                    //                             map[r][c].addCharacter(toAdd);
+                    //                             swarm.add(toAdd);
+                    //                             r = -1;
+                    //                             c = -1;
                 }
             }
         }
@@ -434,27 +534,51 @@ public class MapComponent extends JComponent
         }
     }
 
-    //     public void endTurn(){
-    //         for(int i = 0; i < 0; i++){
-    //             //             if(swarm.get(i).getHome().getRow() - currentRow > 50 || swarm.get(i).getHome().getRow() - currentRow < -50 || 
-    //             //             swarm.get(i).getHome().getCol() - currentCol > 50 || swarm.get(i).getHome().getCol() - currentCol < -50){
-    //             //                 swarm.get(i).kill();
-    //             //                 swarm.remove(i);
-    //             //             }
-    //             //             else{
-    //             if(!you.getHome().isRoom()){
-    //                 if(swarm[i].getHome().getRow() - currentRow > 3 || swarm[i].getHome().getRow() - currentRow < -3 || 
-    //                 swarm[i].getHome().getCol() - currentCol > 3 || swarm[i].getHome().getCol() - currentCol < -3){
-    //                     move(swarm[i].getHome(), adjacent(you.getHome()), swarm[i].getMove());
-    //                 }
-    //                 else{
-    //                     move(swarm[i].getHome(), adjacent(you.getHome()), swarm[i].getMove());
-    //                 }
-    //             }
-    //             //            }
-    //         }
-    //         //        spawn(turn);
-    //         //        turn++;
-    //     }
+    public void D(int mouseX, int mouseY){
+        int xCenter = (width/2) - 30;
+        int yCenter = (height/2) - 30;
+        int xShift = mouseX - xCenter;
+        int yShift = mouseY - yCenter;
+        int xTile = 0;
+        int yTile = 0;
+        if(xShift < 0){
+            xTile = (int)((xShift - 60) / 60);
+        }
+        else if(xShift >= 0){
+            xTile = (int)((xShift) / 60);
+        }
+        if(yShift < 0){
+            yTile = (int)((yShift - 60) / 60);
+        }
+        else if(yShift >= 0){
+            yTile = (int)((yShift) / 60);
+        }
+        Character toAdd = null;
+        if(map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getCharacter() != null){
+            toAdd = map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].getCharacter();
+        }
+        map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile] = new Tile(you.getHome().getRow() + xTile, you.getHome().getCol() + yTile, 16, you.getMove() / 4);
+        if(toAdd != null){
+            map[you.getHome().getRow() + xTile][you.getHome().getCol() + yTile].addCharacter(toAdd);
+        }
+        fixDistance(you.getHome(),move);
+    }
+
+    public void endTurn(){
+        move += (you.getMove() / 2);
+        for(Character c : swarm){
+            if(Math.abs(c.getHome().getCol() - you.getHome().getCol()) < 15 && Math.abs(c.getHome().getRow() - you.getHome().getRow()) < 15){
+                move(c);
+            }
+        }
+        if( move > you.getMove()){
+            move = you.getMove();
+        }
+        aCount = attacks;
+        iCount = items;
+        turn++;
+        spawn();
+        fixDistance(you.getHome(),move);
+    }
 }
 

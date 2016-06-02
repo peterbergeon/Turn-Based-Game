@@ -8,7 +8,7 @@
 public class Enemy extends Character
 {  
     public Enemy(){
-        super("Rat",2,1,1);
+        super("Rat",3,1,1);
     }
     
     public Enemy(String str, int m, int h, int d){
