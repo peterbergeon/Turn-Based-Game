@@ -157,14 +157,34 @@ public class MapComponent extends JComponent
     }
 
     public void createEnemys(){
-        for(int i = 0; i < row; i++){
-            for(int k = 0; k < col; k++){
-                if(Math.random() < 0.01 && map[i][k].getColor() != 100 && i != currentRow && k != currentCol){
-                    swarm.add(map[i][k].addCharacter(new Enemy()));
+        double ran = Math.random();
+        for(int i = 250; i < 350; i++){
+            for(int k = 250; k < 350; k++){
+                ran = Math.random();
+                if(map[i][k].isRoom() && Math.random() < 0.02 && map[i][k].getColor() != 100 && i != currentRow && k != currentCol){
+                    if(ran < 0.6){
+                        swarm.add(map[i][k].addCharacter(new Character("Rat",3,40,5,1)));
+                    }
+                    else if(ran < 0.8){
+                        swarm.add(map[i][k].addCharacter(new Character("GoblinArcher",2,20,5,3)));
+                    }
+                    else{
+                        swarm.add(map[i][k].addCharacter(new Character("Bat",5,20,5,1)));
+                    }
+                }
+                else if (Math.random() < 0.01 && map[i][k].getColor() != 100 && i != currentRow && k != currentCol){
+                    if(ran < 0.6){
+                        swarm.add(map[i][k].addCharacter(new Character("Rat",3,40,5,1)));
+                    }
+                    else if(ran < 0.8){
+                        swarm.add(map[i][k].addCharacter(new Character("GoblinArcher",2,20,5,3)));
+                    }
+                    else{
+                        swarm.add(map[i][k].addCharacter(new Character("Bat",5,20,5,1)));
+                    }
                 }
             }
         }
-        swarm.add(map[303][303].addCharacter(new Enemy()));
     }
 
     public void createRoom(){
@@ -358,24 +378,19 @@ public class MapComponent extends JComponent
 
     public void move(Character e){
         int m = e.getMove();
-        you.getHome().setDistance(1000);
         Tile orgin = e.getHome();
         int original = e.getHome().getDistance() - 1000;
         Tile toMove = orgin;
         toMove.setDistance(10000000);
-        //         while(x > original - m){
-        //             toMove = getLowest(toMove);
-        //             x = toMove.getDistance();
-        //         }
         int x = 3;
         double ran = Math.random();
         while(x > 0){
             for(int r = toMove.getRow() - 1; r <= toMove.getRow() + 1; r++){
                 for(int c = toMove.getCol() - 1; c <= toMove.getCol() + 1; c++){
-                    if(map[r][c].getDistance() < toMove.getDistance() && map[r][c].getDistance() + m > original && map[r][c].getCharacter() == null){
+                    if(map[r][c].getDistance() < toMove.getDistance() && map[r][c].getDistance() + m > original && map[r][c].getCharacter() == null && map[r][c].getColor() != 100 && map[r][c].getDistance() > e.getRange() * 3){
                         toMove = map[r][c];
                     }
-                    else if(map[r][c].getDistance() == toMove.getDistance() && map[r][c].getDistance() + m > original && ran < 0.6 && map[r][c].getCharacter() == null){
+                    else if(map[r][c].getDistance() == toMove.getDistance() && map[r][c].getDistance() + m > original && ran < 0.7 && map[r][c].getCharacter() == null && map[r][c].getColor() != 100 && map[r][c].getDistance() > e.getRange() * 5){
                         toMove = map[r][c];
                         ran = Math.random();
                     }
@@ -386,71 +401,18 @@ public class MapComponent extends JComponent
         move(e,toMove);
     }
 
-    public void moveS(Character e){
-        int x = Math.abs(e.getHome().getRow() - currentRow);
-        int y = Math.abs(e.getHome().getCol() - currentCol);
-
-        int mx = (int)(e.getMove() / 6 * Math.random() + 1);
-        int my = (int)(e.getMove() / 6 * Math.random() + 1);
-
-        if(mx > x) mx = x;
-        if(my > y) my = y;
-
-        if(e.getHome().getRow() - currentRow > 0) mx *= -1;
-        if(e.getHome().getCol() - currentCol > 0) my *= -1;
-
-        mx += currentRow;
-        my += currentCol;
-        while(map[mx][my].getCharacter() == null){
-            double ran = Math.random() * 4;
-            if(ran < 1) mx++;
-            else if(ran < 2) mx--;
-            else if(ran < 3) my++;
-            else my--;
+    public void fly(Character e){
+        int m = e.getMove();
+        Tile orgin = e.getHome();
+        Tile toMove = orgin;
+        for(int i = orgin.getRow() - m; i < orgin.getRow() + m; i++){
+            for(int k = orgin.getCol() - m; k < orgin.getCol() + m; k++){
+                if(map[i][k].getDistance() < toMove.getDistance() && map[i][k].getCharacter() == null){
+                    toMove = map[i][k];
+                }
+            }
         }
-
-        move(e,map[mx][my]);
-    }
-
-    public Tile getLowest(Tile orgin){
-        Tile other = orgin;
-        int distance = orgin.getDistance();
-        if(orgin.getCharacter() != null){
-            distance -= 1000;
-        }
-        if(map[other.getRow() + 1][other.getCol()].getDistance() <= distance){
-            distance = map[other.getRow() + 1][other.getCol()].getDistance();
-            orgin = map[other.getRow() + 1][other.getCol()];
-        }
-        else if(map[other.getRow() + 1][other.getCol() + 1].getDistance() <= distance){
-            distance = map[other.getRow() + 1][other.getCol() + 1].getDistance();
-            orgin = map[other.getRow() + 1][other.getCol() + 1];
-        }
-        else if(map[other.getRow() + 1][other.getCol() - 1].getDistance() <= distance){
-            distance = map[other.getRow() + 1][other.getCol() - 1].getDistance();
-            orgin = map[other.getRow() + 1][other.getCol() - 1];
-        }
-        else if(map[other.getRow()][other.getCol() + 1].getDistance() <= distance){
-            distance = map[other.getRow()][other.getCol() + 1].getDistance();
-            orgin = map[other.getRow()][other.getCol() + 1];
-        }
-        else if(map[other.getRow()][other.getCol() - 1].getDistance() <= distance){
-            distance = map[other.getRow()][other.getCol() - 1].getDistance();
-            orgin = map[other.getRow()][other.getCol() - 1];
-        }
-        else if(map[other.getRow() - 1][other.getCol()].getDistance() <= distance){
-            distance = map[other.getRow() - 1][other.getCol()].getDistance();
-            orgin = map[other.getRow() - 1][other.getCol()];
-        }
-        else if(map[other.getRow() - 1][other.getCol() + 1].getDistance() <= distance){
-            distance = map[other.getRow() - 1][other.getCol() + 1].getDistance();
-            orgin = map[other.getRow() - 1][other.getCol() + 1];
-        }
-        else if(map[other.getRow() - 1][other.getCol() - 1].getDistance() <= distance){
-            distance = map[other.getRow() - 1][other.getCol() - 1].getDistance();
-            orgin = map[other.getRow() - 1][other.getCol() - 1];
-        }
-        return orgin;
+        move(e,toMove);
     }
 
     public void getDistance(Tile other){
@@ -567,8 +529,13 @@ public class MapComponent extends JComponent
     public void endTurn(){
         move += (you.getMove() / 2);
         for(Character c : swarm){
-            if(Math.abs(c.getHome().getCol() - you.getHome().getCol()) < 15 && Math.abs(c.getHome().getRow() - you.getHome().getRow()) < 15){
-                move(c);
+            if(Math.abs(c.getHome().getCol() - you.getHome().getCol()) < 20 && Math.abs(c.getHome().getRow() - you.getHome().getRow()) < 20 && c.getHome().isRoom() == you.getHome().isRoom()){
+                if(c.getType().equals("Bat")){
+                    fly(c);
+                }
+                else{
+                    move(c);
+                }
             }
         }
         if( move > you.getMove()){
